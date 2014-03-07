@@ -21,7 +21,8 @@ function tokenize(expression){
 		
 		var match = rtok.exec(expression);
 		// Make sure we found a token, and that we found
-		// one without skipping garbage
+		// one without skipping garbage	
+
 		if (!match || rtok.lastIndex - match[0].length !== p)
 			throw new SyntaxError();
 
@@ -227,13 +228,15 @@ function toTree(array){
 	}
 }
 function evaluateTree(tree,variables){
+
 	if(tree instanceof Operand){
 		return tree.value;
 	}
-	if(tree.leftOperand){
+	if(tree.leftOperand!==undefined){
 		return tree.evaluate([tree.leftOperand,tree.rightOperand]);
 
 	}else{
+
 		return tree.evaluate([tree.operand]);
 	}
 }

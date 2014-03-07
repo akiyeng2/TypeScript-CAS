@@ -1,4 +1,4 @@
-	function Operator(tok){
+function Operator(tok){
 	this.type=tok.type;
 	this.txt=tok.txt;
 	this.numOperands=tok.operands;
@@ -11,204 +11,76 @@
 	this.evaluate=function(operands,variables){
 		var a=operands[0];
 		var b=(operands.length==2)?operands[1]:null;
-		if(this.txt=="+"){
-			if(a instanceof Operand && b instanceof Operand){
-				return a.value+b.value;
-			}else if(a instanceof Operator && b instanceof Operand){
-				return evaluateTree(a)+b.value;
-			}else if(a instanceof Operand && b instanceof Operator){
-				return a.value+evaluateTree(b);
+		var right,left;
+		if(a instanceof Operand){
+			left=a.value;
+		}else{
+			left=evaluateTree(a);
+		}
+		if(b!==null){
+			if(b instanceof Operand){
+				right=b.value;
 			}else{
-				return evaluateTree(a)+evaluateTree(b);
+				right=evaluateTree(b);
 			}
+		}
+		if(this.txt=="+"){
+			return left+right;
 			
 		}else if(this.txt=="-"){
 			
-			if(a instanceof Operand && b instanceof Operand){
-				return a.value-b.value;
-			}else if(a instanceof Operator && b instanceof Operand){
-				return evaluateTree(a)-b.value;
-			}else if(a instanceof Operand && b instanceof Operator){
-				return a.value-evaluateTree(b);
-			}else{
-				return evaluateTree(a)-evaluateTree(b);
-			}
-			
+			return left-right
 			
 		}else if(this.txt=="!"){
-			
-			if(a instanceof Operand){
-				return -1*a.value;
+			return -1*left;
 				
-			}else{
-				return -1*evaluateTree(a);
-			}
 			
 		}else if(this.txt=="*"){
-			
-			if(a instanceof Operand && b instanceof Operand){
-				return a.value*b.value;
-			}else if(a instanceof Operator && b instanceof Operand){
-				return evaluateTree(a)*b.value;
-			}else if(a instanceof Operand && b instanceof Operator){
-				return a.value*evaluateTree(b);
-			}else{
-				return evaluateTree(a)*evaluateTree(b);
-			}
-			
+			return left*right;
 		}else if(this.txt=="/"){
-			
-			if(a instanceof Operand && b instanceof Operand){
-				return a.value/b.value;
-			}else if(a instanceof Operator && b instanceof Operand){
-				return evaluateTree(a)/b.value;
-			}else if(a instanceof Operand && b instanceof Operator){
-				return a.value/evaluateTree(b);
-			}else{
-				return evaluateTree(a)/evaluateTree(b);
-			}
-			
+			return left/right;
 		}
 		else if(this.txt=="^"){
-			
-			if(a instanceof Operand && b instanceof Operand){
-				return Math.pow(a.value,b.value);
-			}else if(a instanceof Operator && b instanceof Operand){
-				return Math.pow(evaluateTree(a),b.value);
-			}else if(a instanceof Operand && b instanceof Operator){
-				return Math.pow(a.value,evaluateTree(b));
-			}else{
-				return Math.pow(evaluateTree(a),evaluateTree(b));
-			}
-			
+			return Math.pow(left,right);
 		}else if(this.txt=="log"){
-			
-			if(a instanceof Operand){
-				return Math.log(a.value)/Math.log(10);
-			}else{
-				return Math.log(evaluateTree(a))/Math.log(10);
-			}
+			return Math.log(left)/Math.log(10)
 			
 		}else if(this.txt=="ln"){
-			
-			if(a instanceof Operand){
-				return Math.log(a.value);
-			}else{
-				return Math.log(evaluateTree(a));
-			}
-			
+			return Math.log(left);
 		}else if(this.txt=="sqrt"){
-			
-			if(a instanceof Operand){
-				return Math.sqrt(a.value);
-			}else{
-				return Math.sqrt(evaluateTree(a));
-			}
+			return Math.sqrt(left);
 			
 		}else if(this.txt=="abs"){
 		
-			if(a instanceof Operand){
-				return Math.abs(a.value);
-			}else{
-				return Math.abs(evaluateTree(a));
-			}
+			return Math.abs(left);
 			
 		}else if(this.txt=="sin"){
-			
-			if(a instanceof Operand){
-				return Math.sin(a.value);
-			}else{
-				return Math.sin(evaluateTree(a));
-			}
+			return Math.sin(left);
 			
 		}else if(this.txt=="cos"){
 			
-			if(a instanceof Operand){
-				return Math.cos(a.value);
-			}else{
-				return Math.cos(evaluateTree(a));
-			}
+			return Math.cos(left);
 			
 		}else if(this.txt=="tan"){
-			
-			if(a instanceof Operand){
-				return Math.tan(a.value);
-			}else{
-				return Math.tan(evaluateTree(a));
-			}
-			
+			return Math.tan(left);
 		}else if(this.txt=="csc"){
-			
-			if(a instanceof Operand){
-				return 1/Math.sin(a.value);
-			}else{
-				return 1/Math.sin(evaluateTree(a));
-			}
-			
+			return 1/Math.sin(left);
 		}else if(this.txt=="sec"){
-			
-			if(a instanceof Operand){
-				return 1/Math.cos(a.value);
-			}else{
-				return 1/Math.cos(evaluateTree(a));
-			}
-			
+			return 1/Math.cos(left);
 		}else if(this.txt=="cot"){
-			
-			if(a instanceof Operand){
-				return 1/Math.cot(a.value);
-			}else{
-				return 1/Math.cot(evaluateTree(a));
-			}
-			
+			return 1/Math.tan(left);
 		}else if(this.txt=="arcsin"){
-		
-			if(a instanceof Operand){
-				return Math.asin(a.value);
-			}else{
-				return Math.asin(evaluateTree(a));
-			}
-			
+			return Math.asin(left);
 		}else if(this.txt=="arccos"){
-			
-			if(a instanceof Operand){
-				return Math.acos(a.value);
-			}else{
-				return Math.acos(evaluateTree(a));
-			}
-		
+			return Math.acos(left);
 		}else if(this.txt=="arctan"){
-			
-			if(a instanceof Operand){
-				return Math.atan(a.value);
-			}else{
-				return Math.atan(evaluateTree(a));
-			}
-			
+			return Math.atan(left);
 		}else if(this.txt="arccsc"){
-			
-			if(a instanceof Operand){
-				return Math.asin(1/a.value);
-			}else{
-				return Math.asin(1/evaluateTree(a));
-			}
-			
+			return Math.asin(1/left);
 		}else if(this.txt="arcsec"){
-			
-			if(a instanceof Operand){
-				return Math.acos(1/a.value);
-			}else{
-				return Math.acos(1/evaluateTree(a));
-			}
-			
+			return Math.acos(1/left);
 		}else if(this.txt="arccot"){
-			
-			if(a instanceof Operand){
-				return Math.atan(1/a.value);
-			}else{
-				return Math.atan(1/evaluateTree(a));
-			}
-			
+			return Math.atan(1/left);
 		}	
 	};
 }
