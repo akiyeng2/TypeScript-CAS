@@ -17,9 +17,10 @@
  * 		Otherwise if it is an operator
  * 			if it is an addition, subtraction, multiplication, or division operator
  * 				get the two operands 
- * 					create a new node that is the derivative, and set it equal to derivative(tree)
- * 			otherwise if it is an exponent operator
-
- * 				
+ * 					apply sum/difference/product/quotient rules, and create a new node that is the derivative, and set it equal to derivative(tree)
+ * 			otherwise apply chain rule
+ * 				create a new node, set it equal to the derivative of the outside function as the 
+ * 				parent and the inside function as the child, add a new operator for multiplication, 
+ * 				and set the derivative of the inside function	
  * 
  */

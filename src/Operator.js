@@ -1,4 +1,4 @@
-function Operator(tok){
+	function Operator(tok){
 	this.type=tok.type;
 	this.txt=tok.txt;
 	this.numOperands=tok.operands;
@@ -204,9 +204,9 @@ function Operator(tok){
 		}else if(this.txt="arccot"){
 			
 			if(a instanceof Operand){
-				return Math.acot(1/a.value);
+				return Math.atan(1/a.value);
 			}else{
-				return Math.acot(1/evaluateTree(a));
+				return Math.atan(1/evaluateTree(a));
 			}
 			
 		}	
