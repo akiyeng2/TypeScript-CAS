@@ -20,4 +20,7 @@ function Stack(arr){
 	this.length=function(){
 		return array.length;
 	};
+	this.getArray=function(){
+		return array;
+	}
 }

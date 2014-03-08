@@ -29,7 +29,7 @@ function derivative(tree){
 		if(tree.isVariable){
 			return new Operand(tokenize("1")[0]);
 		}else{
-			return new Operand(tokenize("0")[0]);
+			return new Operand(tokenize("0")[0]);	
 		}
 	}else{
 		if(tree.numOperands==1){
@@ -40,5 +40,5 @@ function derivative(tree){
 	}
 }
 function differentiateFunction(expression){
-	return derivative(toTree(shunt(expression)));
+	return stringy(toInfix(toPostfix(derivative(toTree(shunt(expression))))));
 }

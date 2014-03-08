@@ -2,6 +2,8 @@ function Operator(tok){
 	this.type=tok.type;
 	this.txt=tok.txt;
 	this.numOperands=tok.operands;
+	this.precedence=tok.precedence;
+	this.associativity=tok.associativity;
 	if(this.numOperands==1){
 		this.operand;
 	}else{
@@ -72,25 +74,26 @@ function Operator(tok){
 		}	
 	};
 	this.differentiate=function(operands){
-		var left=derivative(operands[0]);
-		var right=derivative((operands.length==2)?operands[1]:null);
+		var left=operands[0];
+		var right=(operands.length==2)?operands[1]:null;
 		
 		if(this.txt=="+"){
 			var addition=new Operator(tokenize("+")[0]);
-			addition.leftOperand=left;
-			addition.rightOperand=right;
+			addition.leftOperand=derivative(left);
+			addition.rightOperand=derivative(right);
 			return addition;
 		}else if(this.txt=="*"){
 			var addition=new Operator(tokenize("+")[0]);
 			addition.leftOperand=new Operator(tokenize("*")[0]);
 			addition.leftOperand.leftOperand=left;
 			addition.leftOperand.rightOperand=derivative(right);
+
 			
 			addition.rightOperand=new Operator(tokenize("*")[0]);
 			addition.rightOperand.leftOperand=right;
 			addition.rightOperand.rightOperand=derivative(left);
 			return addition;
-
+			
 		}
 	};
 }
@@ -108,5 +111,6 @@ function Operand(tok){
 			this.value=parseFloat(tok.txt,10);
 		}
 	}
+	this.txt=tok.txt;
 	
 }

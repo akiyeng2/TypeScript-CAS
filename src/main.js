@@ -216,8 +216,6 @@ function toTree(array){
 				operator.leftOperand=left;
 				operator.rightOperand=right;
 			}
-			delete operator.numOperands;
-			delete operator.type;
 			stack.push(operator);
 		}
 	}
@@ -251,4 +249,77 @@ function stringify(expression){
 	}
 	return str;
 	
+
 }
+
+/*
+ * We haz tree
+ *              add
+ *             /   \
+ *            1   divide  
+ *               /      \
+ *              4        2
+ * 
+ * wanted result:
+ * add 1 divide 4 2
+ * We haz a stack
+ *  if it is an operator
+ * 		push it to the stack
+ * 		push left and right to the stack as well
+ *  otherwise
+ *  	push the tree to the stack
+ */
+
+function postfix(tree,stack){
+//	console.log(stack.getArray());
+	
+	if(tree instanceof Operand){
+		stack.push(tree);
+	}else if(tree instanceof Operator){
+		var left=postfix(tree.leftOperand,stack);
+		var right=postfix(tree.rightOperand,stack);
+		stack.push(left,right);
+		stack.push(tree);
+
+	
+	}
+	return stack;
+
+}
+function toPostfix(tree){
+	var arr=postfix(tree,new Stack());
+	var array=[];
+	while(!arr.empty()){
+		var steve=arr.pop();
+		if(!(steve instanceof Stack)){
+			array.push(steve);
+		}
+	}
+	return array.reverse();
+}
+function stringy(arr){
+	var str="";
+	for(var i=0;i<arr.length;i++){
+		str+=arr[i].txt+" ";
+	}
+	return str;
+}
+function toInfix(postfix){
+	var stack=new Stack();
+	for(var i=0;i<postfix.length;i++){
+		var token=postfix[i];
+		if(token instanceof Operand){
+			stack.push(token);
+		}else{
+			var right=stack.pop();
+			var left=stack.pop();
+			stack.push(tokenize("(")[0]);
+			stack.push(left);
+			stack.push(token);
+			stack.push(right);
+			stack.push(tokenize(")")[0]);
+		}
+		console.log(stack);
+	}
+	return stack.getArray();
+}	
