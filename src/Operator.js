@@ -26,15 +26,10 @@ function Operator(tok){
 		}
 		if(this.txt=="+"){
 			return left+right;
-			
 		}else if(this.txt=="-"){
-			
 			return left-right
-			
 		}else if(this.txt=="!"){
 			return -1*left;
-				
-			
 		}else if(this.txt=="*"){
 			return left*right;
 		}else if(this.txt=="/"){
@@ -44,23 +39,16 @@ function Operator(tok){
 			return Math.pow(left,right);
 		}else if(this.txt=="log"){
 			return Math.log(left)/Math.log(10)
-			
 		}else if(this.txt=="ln"){
 			return Math.log(left);
 		}else if(this.txt=="sqrt"){
 			return Math.sqrt(left);
-			
 		}else if(this.txt=="abs"){
-		
 			return Math.abs(left);
-			
 		}else if(this.txt=="sin"){
 			return Math.sin(left);
-			
 		}else if(this.txt=="cos"){
-			
 			return Math.cos(left);
-			
 		}else if(this.txt=="tan"){
 			return Math.tan(left);
 		}else if(this.txt=="csc"){
@@ -82,6 +70,28 @@ function Operator(tok){
 		}else if(this.txt="arccot"){
 			return Math.atan(1/left);
 		}	
+	};
+	this.differentiate=function(operands){
+		var left=derivative(operands[0]);
+		var right=derivative((operands.length==2)?operands[1]:null);
+		
+		if(this.txt=="+"){
+			var addition=new Operator(tokenize("+")[0]);
+			addition.leftOperand=left;
+			addition.rightOperand=right;
+			return addition;
+		}else if(this.txt=="*"){
+			var addition=new Operator(tokenize("+")[0]);
+			addition.leftOperand=new Operator(tokenize("*")[0]);
+			addition.leftOperand.leftOperand=left;
+			addition.leftOperand.rightOperand=derivative(right);
+			
+			addition.rightOperand=new Operator(tokenize("*")[0]);
+			addition.rightOperand.leftOperand=right;
+			addition.rightOperand.rightOperand=derivative(left);
+			return addition;
+
+		}
 	};
 }
 function Operand(tok){

@@ -240,7 +240,7 @@ function evaluateTree(tree,variables){
 		return tree.evaluate([tree.operand]);
 	}
 }
-function evaluate(expression){
+function evaluateFunction(expression){
 	return evaluateTree(toTree(shunt(expression)));
 }
 function stringify(expression){

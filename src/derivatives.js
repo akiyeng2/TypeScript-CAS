@@ -24,3 +24,21 @@
  * 				and set the derivative of the inside function	
  * 
  */
+function derivative(tree){
+	if(tree instanceof Operand){
+		if(tree.isVariable){
+			return new Operand(tokenize("1")[0]);
+		}else{
+			return new Operand(tokenize("0")[0]);
+		}
+	}else{
+		if(tree.numOperands==1){
+			return tree.differentiate([tree.operand]);
+		}else{
+			return tree.differentiate([tree.leftOperand,tree.rightOperand]);
+		}
+	}
+}
+function differentiateFunction(expression){
+	return derivative(toTree(shunt(expression)));
+}
