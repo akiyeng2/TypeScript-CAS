@@ -306,20 +306,22 @@ function stringy(arr){
 }
 function toInfix(postfix){
 	var stack=new Stack();
+	
 	for(var i=0;i<postfix.length;i++){
 		var token=postfix[i];
 		if(token instanceof Operand){
 			stack.push(token);
 		}else{
+
 			var right=stack.pop();
 			var left=stack.pop();
-			stack.push(tokenize("(")[0]);
-			stack.push(left);
-			stack.push(token);
-			stack.push(right);
-			stack.push(tokenize(")")[0]);
+			var op=new Operator(token);
+			op.leftOperand=left;
+			op.rightOperand=right;
+			op.txt="("+left.txt+token.txt+right.txt+")";
+			stack.push(op);
 		}
-		console.log(stack);
+
 	}
 	return stack.getArray();
 }	

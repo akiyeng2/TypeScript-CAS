@@ -40,5 +40,6 @@ function derivative(tree){
 	}
 }
 function differentiateFunction(expression){
-	return stringy(toInfix(toPostfix(derivative(toTree(shunt(expression))))));
+//	console.log(stringy(toInfix(toPostfix(derivative(toTree(shunt(expression)))))));
+	return derivative(toTree(shunt(expression)));
 }

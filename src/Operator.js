@@ -1,15 +1,26 @@
+function containsVariable(tree){
+	if(tree instanceof Operand){
+		return tree.isVariable;
+	}else{
+		return containsVariable(tree.leftOperand);
+		return containsVariable(tree.rightOperand);
+	}
+	
+}
 function Operator(tok){
 	this.type=tok.type;
 	this.txt=tok.txt;
 	this.numOperands=tok.operands;
 	this.precedence=tok.precedence;
 	this.associativity=tok.associativity;
+	
 	if(this.numOperands==1){
 		this.operand;
 	}else{
 		this.leftOperand;
 		this.rightOperand;
 	}
+
 	this.evaluate=function(operands,variables){
 		var a=operands[0];
 		var b=(operands.length==2)?operands[1]:null;
@@ -94,6 +105,26 @@ function Operator(tok){
 			addition.rightOperand.rightOperand=derivative(left);
 			return addition;
 			
+		}else if(this.txt=="-"){
+			var subtraction=new Operator(tokenize("1-")[1]);
+			subtraction.leftOperand=derivative(left);
+			subtraction.rightOperand=derivative(right);
+			return subtraction;
+		}else if(this.txt=="/"){
+			var division=new Operator(tokenize("/")[0]);
+			division.rightOperand=new Operator(tokenize("^")[0]);
+			division.rightOperand.leftOperand=right;
+			division.rightOperand.rightOperand=new Operand(tokenize("2")[0]);
+			division.leftOperand=new Operator(tokenize("1-")[1]);
+			division.leftOperand.leftOperand=new Operator(tokenize("*")[0]);
+			division.leftOperand.leftOperand.leftOperand=right;
+			division.leftOperand.leftOperand.rightOperand=derivative(left);
+			division.leftOperand.rightOperand=new Operator(tokenize("*")[0]);
+			division.leftOperand.rightOperand.leftOperand=left;
+			division.leftOperand.rightOperand.rightOperand=derivative(right);
+			return division;
+		}else if(this.txt=="^"){
+			console.log(containsVariable(this.rightOperand));
 		}
 	};
 }
