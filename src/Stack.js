@@ -22,5 +22,5 @@ function Stack(arr){
 	};
 	this.getArray=function(){
 		return array;
-	}
+	};
 }

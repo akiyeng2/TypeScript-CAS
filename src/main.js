@@ -276,10 +276,16 @@ function postfix(tree,stack){
 	if(tree instanceof Operand){
 		stack.push(tree);
 	}else if(tree instanceof Operator){
-		var left=postfix(tree.leftOperand,stack);
-		var right=postfix(tree.rightOperand,stack);
-		stack.push(left,right);
-		stack.push(tree);
+		if(tree.numOperands==2){
+			var left=postfix(tree.leftOperand,stack);
+			var right=postfix(tree.rightOperand,stack);
+			stack.push(left,right);
+			stack.push(tree);
+		}else{
+			var left=postfix(tree.operand,stack);
+			stack.push(left);
+			stack.push(tree);
+		}
 
 	
 	}
@@ -305,20 +311,32 @@ function stringy(arr){
 	return str;
 }
 function toInfix(postfix){
+//	console.log(postfix);
 	var stack=new Stack();
-	
+
 	for(var i=0;i<postfix.length;i++){
 		var token=postfix[i];
 		if(token instanceof Operand){
 			stack.push(token);
 		}else{
-
-			var right=stack.pop();
-			var left=stack.pop();
 			var op=new Operator(token);
-			op.leftOperand=left;
-			op.rightOperand=right;
-			op.txt="("+left.txt+token.txt+right.txt+")";
+
+			if(token.numOperands==2){
+
+				var right=stack.pop();
+
+				var left=stack.pop();	
+				op.leftOperand=left;
+				op.rightOperand=right;
+				
+				op.txt="("+left.txt+token.txt+right.txt+")";
+			}else{
+				
+				var left=stack.pop();
+				op.operand=left;
+			
+				op.txt=op.txt+"("+left.txt+")";
+			}
 			stack.push(op);
 		}
 
