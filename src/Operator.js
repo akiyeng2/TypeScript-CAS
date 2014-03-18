@@ -256,7 +256,6 @@ function Operator(tok){
 							operator("1"),
 							operator("^",left,operator("2")))));
 		}
-//		console.log("The derivative of "+stringy(toInfix(toPostfix(this)))+"is "+stringy(toInfix(toPostfix(result))));
 		return result;
 	};
 }
