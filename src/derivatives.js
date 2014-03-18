@@ -25,6 +25,7 @@
  * 
  */
 function derivative(tree){
+	
 	if(tree instanceof Operand){
 		if(tree.isVariable){
 			return new Operand(tokenize("1")[0]);
@@ -32,16 +33,7 @@ function derivative(tree){
 			return new Operand(tokenize("0")[0]);	
 		}
 	}else{
-		if(tree.numOperands==1){
-			return tree.differentiate([tree.operand]);
-		}else{
-			return tree.differentiate([tree.leftOperand,tree.rightOperand]);
-		}
+		return tree.differentiate();
 	}
 }
-function differentiateFunction(expression){
-//	console.log(stringy(toPostfix(derivative(toTree(shunt(expression))))));
-	return (stringy(toInfix(toPostfix(derivative(toTree(shunt(expression)))))));
 
-//	return derivative(toTree(shunt(expression)));
-}

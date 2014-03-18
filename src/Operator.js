@@ -66,9 +66,14 @@ function Operator(tok){
 		this.rightOperand;
 	}
 
-	this.evaluate=function(operands,variables){
-		var a=operands[0];
-		var b=(operands.length==2)?operands[1]:null;
+	this.evaluate=function(variables){
+		var a=null,b=null;
+		if(this.numOperands==1){
+			a=this.operand;
+		}else{
+			a=this.leftOperand;
+			b=this.rightOperand;
+		}
 		var right=null,left=null;
 		if(a instanceof Operand){
 			left=a.value;
@@ -129,45 +134,32 @@ function Operator(tok){
 			return Math.atan(1/left);
 		}	
 	};
-	this.differentiate=function(operands){
-		var left=operands[0];
-		var right=(operands.length==2)?operands[1]:null;
-		
+	
+	
+	this.differentiate=function(){
+		var left=null,right=null;
+		if(this.numOperands==1){
+			left=this.operand;
+		}else{
+			left=this.leftOperand;
+			right=this.rightOperand;
+		}
 		if(this.txt=="+"){
-			var addition=new Operator(tokenize("+")[0]);
-			addition.leftOperand=derivative(left);
-			addition.rightOperand=derivative(right);
-			return addition;
+			result=operator("+",derivative(left),derivative(right));
 		}else if(this.txt=="*"){
-			var addition=new Operator(tokenize("+")[0]);
-			addition.leftOperand=new Operator(tokenize("*")[0]);
-			addition.leftOperand.leftOperand=left;
-			addition.leftOperand.rightOperand=derivative(right);
-
-			
-			addition.rightOperand=new Operator(tokenize("*")[0]);
-			addition.rightOperand.leftOperand=right;
-			addition.rightOperand.rightOperand=derivative(left);
-			return addition;
-			
+			result=operator("*",
+						operator("+",left,derivative(right)),
+						operator("+",right,derivative(left))
+			);
 		}else if(this.txt=="-"){
-			var subtraction=new Operator(tokenize("1-")[1]);
-			subtraction.leftOperand=derivative(left);
-			subtraction.rightOperand=derivative(right);
-			return subtraction;
+			result=operator("-",derivative(left),derivative(right));
 		}else if(this.txt=="/"){
-			var division=new Operator(tokenize("/")[0]);
-			division.rightOperand=new Operator(tokenize("^")[0]);
-			division.rightOperand.leftOperand=right;
-			division.rightOperand.rightOperand=new Operand(tokenize("2")[0]);
-			division.leftOperand=new Operator(tokenize("1-")[1]);
-			division.leftOperand.leftOperand=new Operator(tokenize("*")[0]);
-			division.leftOperand.leftOperand.leftOperand=right;
-			division.leftOperand.leftOperand.rightOperand=derivative(left);
-			division.leftOperand.rightOperand=new Operator(tokenize("*")[0]);
-			division.leftOperand.rightOperand.leftOperand=left;
-			division.leftOperand.rightOperand.rightOperand=derivative(right);
-			return division;
+			result=operator("/",
+					operator("-",
+						operator("*",right,derivative(left)),
+						operator("*",left,derivative(right))
+					),operator("^",right,operator("2"))
+			);
 		}else if(this.txt=="^"){
 			/*
 			 * OK how do I am do derivatives
@@ -182,50 +174,102 @@ function Operator(tok){
 					operator("*",right, 
 							operator("^",left, 
 									operator("-",right, 
-											operator("1")))),derivative(left));
+											operator("1")
+										)
+									)
+							),
+							derivative(left)
+					);
 			var exponentRule=operator("*",
 					operator("*",
 							operator("^",left,right),
 							operator("ln",left)),derivative(right));
 			if(isVariable(left) && !isVariable(right)){
-				return powerRule;
+				result= powerRule;
 			}else if(!isVariable(left) && isVariable(right)){
-				return exponentRule;
+				result=exponentRule;
 			}else{
-				return operator("+",powerRule,exponentRule);
+				result= operator("+",powerRule,exponentRule);
 			}
 			
 			
 				
 			
-		}else if(this.txt=="!"){
-			
-			return operator("!",derivative(left));
-		}else if(this.txt=="sin"){
-			return operator("*",
+		}else if(this.txt=="!"){			
+			result=operator("!",derivative(left));
+		}else if(this.txt=="ln"){
+			result=operator("/",derivative(left),left);
+		}else if(this.txt=="log"){
+			result=operator("/",derivative(left),operator("*",left,operator("ln",operator("10"))));
+		}else if(this.txt=="sqrt"){
+			result=operator("/",derivative(left),
+					operator("*",
+							operator("2"),
+							operator("sqrt",left)));
+		}
+		else if(this.txt=="sin"){
+			result=operator("*",
 					operator("cos",left),derivative(left));
 		}else if(this.txt=="cos"){
-			return operator("*",
-					operator("-",operator("0"),
+			result=operator("*",
+					operator("!",
 							operator("sin",left)),derivative(left));
 		}else if(this.txt=="tan"){
-			return operator("*",
+			result=operator("*",
 					operator("^",
 							operator("sec",left),operator("2")),derivative(left));
 		}else if(this.txt=="csc"){
-			return operator("*",
-					operator("-",operator("0"),
+			result=operator("*",
+					operator("!",
 							operator("*",
 									operator("csc",left),
 									operator("cot",left))),derivative(left));
 		}else if(this.txt=="sec"){
-			return operator("*",
+			result=operator("*",
 					operator("*",
 							operator("sec",left),
 							operator("tan",left)),derivative(left));
 		}else if(this.txt=="cot"){
-			return operator("-",operator("0"),operator("*",operator("^",operator("csc",left),operator("2")),derivative(left)));
+			result=operator("!",operator("*",operator("^",operator("csc",left),operator("2")),derivative(left)));
+		}else if(this.txt=="arcsin"){
+			result=operator("/",derivative(left),
+					operator("sqrt",
+							operator("-",operator("1"),
+									operator("^",left,operator("2")))));
+		}else if(this.txt=="arccos"){
+			result=operator("!",
+					operator("/",derivative(left),
+							operator("sqrt",
+									operator("-",operator("1"),
+											operator("^",left,operator("2"))))));
+		}else if(this.txt=="arctan"){
+			result=operator("/",
+					derivative(left),
+					operator("+",
+							operator("1"),
+							operator("^",left,operator("2"))));
+		}else if(this.txt=="arcsec"){
+			result=operator("/",derivative(left),
+					operator("*",
+							operator("abs",left),
+							operator("sqrt",
+									operator("-",operator("^",left,operator("2")),operator("1")))));
+		}else if(this.txt=="arccsc"){
+			result=operator("!", 
+					operator("/",derivative(left),
+					operator("*",
+							operator("abs",left),
+							operator("sqrt",
+									operator("-",operator("^",left,operator("2")),operator("1"))))));
+		}else if(this.txt=="arccot"){
+			result=operator("!",operator("/",
+					derivative(left),
+					operator("+",
+							operator("1"),
+							operator("^",left,operator("2")))));
 		}
+//		console.log("The derivative of "+stringy(toInfix(toPostfix(this)))+"is "+stringy(toInfix(toPostfix(result))));
+		return result;
 	};
 }
 function Operand(tok){
