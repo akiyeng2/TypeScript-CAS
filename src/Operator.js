@@ -12,15 +12,15 @@ function operator(str,left,right){
 	if(str==="!"){
 		var op=new Operator(tokenize("-")[0]);
 		op.operand=left;
-	
+
 		return op;
 	}
 	var token=tokenize(str)[0];
 	if(token.type===0||token.type===5){
-		
+
 		return new Operand(token);
 	}
-	
+
 	if(str==="-"){
 
 		var op=new Operator(tokenize("1-")[1]);
@@ -38,27 +38,15 @@ function operator(str,left,right){
 	}
 	return op;
 }
-function containsVariable(tree){
-	if(tree instanceof Operand){
-		return tree.isVariable;
-	}else{
-		return containsVariable(tree.leftOperand);
-		return containsVariable(tree.rightOperand);
-	}
-	
-}
+
 function Operator(tok){
 //	console.log(tok);
 	this.type=tok.type;
 	this.txt=tok.txt;
 	this.numOperands=tok.operands;
-	if(this.numOperands===undefined){
-//		console.log(tok);
-//		console.log(this);
-	}
 	this.precedence=tok.precedence;
 	this.associativity=tok.associativity;
-	
+
 	if(this.numOperands==1){
 		this.operand;
 	}else{
@@ -134,8 +122,8 @@ function Operator(tok){
 			return Math.atan(1/left);
 		}	
 	};
-	
-	
+
+
 	this.differentiate=function(){
 		var left=null,right=null;
 		if(this.numOperands==1){
@@ -148,16 +136,16 @@ function Operator(tok){
 			result=operator("+",derivative(left),derivative(right));
 		}else if(this.txt=="*"){
 			result=operator("*",
-						operator("+",left,derivative(right)),
-						operator("+",right,derivative(left))
+					operator("+",left,derivative(right)),
+					operator("+",right,derivative(left))
 			);
 		}else if(this.txt=="-"){
 			result=operator("-",derivative(left),derivative(right));
 		}else if(this.txt=="/"){
 			result=operator("/",
 					operator("-",
-						operator("*",right,derivative(left)),
-						operator("*",left,derivative(right))
+							operator("*",right,derivative(left)),
+							operator("*",left,derivative(right))
 					),operator("^",right,operator("2"))
 			);
 		}else if(this.txt=="^"){
@@ -175,11 +163,11 @@ function Operator(tok){
 							operator("^",left, 
 									operator("-",right, 
 											operator("1")
-										)
 									)
-							),
-							derivative(left)
-					);
+							)
+					),
+					derivative(left)
+			);
 			var exponentRule=operator("*",
 					operator("*",
 							operator("^",left,right),
@@ -191,10 +179,10 @@ function Operator(tok){
 			}else{
 				result= operator("+",powerRule,exponentRule);
 			}
-			
-			
-				
-			
+
+
+
+
 		}else if(this.txt=="!"){			
 			result=operator("!",derivative(left));
 		}else if(this.txt=="ln"){
@@ -257,10 +245,10 @@ function Operator(tok){
 		}else if(this.txt=="arccsc"){
 			result=operator("!", 
 					operator("/",derivative(left),
-					operator("*",
-							operator("abs",left),
-							operator("sqrt",
-									operator("-",operator("^",left,operator("2")),operator("1"))))));
+							operator("*",
+									operator("abs",left),
+									operator("sqrt",
+											operator("-",operator("^",left,operator("2")),operator("1"))))));
 		}else if(this.txt=="arccot"){
 			result=operator("!",operator("/",
 					derivative(left),
@@ -287,5 +275,5 @@ function Operand(tok){
 		}
 	}
 	this.txt=tok.txt;
-	
+
 }

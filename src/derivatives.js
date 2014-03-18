@@ -28,12 +28,11 @@ function derivative(tree){
 	
 	if(tree instanceof Operand){
 		if(tree.isVariable){
-			return new Operand(tokenize("1")[0]);
+			return new operator("1");
 		}else{
-			return new Operand(tokenize("0")[0]);	
+			return new operator("0");	
 		}
 	}else{
 		return tree.differentiate();
 	}
 }
-
