@@ -9,7 +9,12 @@ function stringifyPostfix(expression){
 function stringy(arr){
 	var str="";
 	for(var i=0;i<arr.length;i++){
-		str+=arr[i].txt+" ";
+
+		if(arr[i].txt=="!"){
+			str+="- "
+		}else{
+			str+=arr[i].txt+" ";
+		}
 	}
 	return str;
 }

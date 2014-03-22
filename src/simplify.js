@@ -4,6 +4,26 @@ function decimalPlaces(number) {
 function equals(tree1,tree2){
 //	if(tree1 instanceof Operator)
 }
+function makeCommutative(tree){
+	if(tree instanceof Operand){
+		return tree;
+	}else{
+		if(tree.txt=="-"){
+			var left=tree.leftOperand;
+			var right=tree.rightOperand;
+			tree=new operator("+",left,
+					new operator("!",right));
+			return makeCommutative(tree);
+		}if(tree.txt=="/"){
+			var left=tree.leftOperand;
+			var right=tree.rightOperand;
+			tree=new operator("*",left,
+					new operator("^",right,new operator("-1")));
+			return makeCommutative(tree);
+		}
+	}
+	return tree;
+}
 function order(tree){
 	if(tree instanceof Operand){
 		return tree;
@@ -29,60 +49,62 @@ function order(tree){
 	return tree;
 }
 function simplify(tree){
-	//A warning: This is going to be the ugliest code I have ever written. 
-	//Here be dragonic if statements
 	
 	tree=order(tree);
 	if(tree instanceof Operand){
 
 		return tree;
 	}else{
-		if(!isVariable(tree)){
-			var result=Math.round(tree.evaluate()*1e10)/1e10;
-			if(decimalPlaces(result)<=5){
-				return operator(result.toString());
-			}else{
-				tree.txt=displayTree(tree);
+	
+		if(tree.txt=="+"){
+			if(tree.leftOperand.txt=="0"){
+				tree=simplify(tree.rightOperand);
+				return tree;
+			}
+			if(tree.rightOperand.txt=="0"){
+				tree=simplify(tree.leftOperand);
+				return tree;
+			}
+	
+		}else if(tree.txt=="*"){
+			if(tree.leftOperand.txt=="0" || tree.rightOperand.txt=="0"){
+				tree=operator("0");
 				return tree;
 			}
 			
-		}else{
-			if(tree.txt=="+"){
-				if(tree.leftOperand.txt=="0"){
-					tree=simplify(tree.rightOperand);
-					return tree;
-				}
-			}else if(tree.txt=="*"){
-				if(tree.leftOperand.txt=="0"){
-					tree=operator("0");
-					return tree;
-				}else if(tree.leftOperand.txt=="1"){
-					tree=simplify(tree.rightOperand);
-					return tree;
-				}
-			}else if(tree.txt=="^"){
-				
-				if(tree.rightOperand.txt=="1"){
-					tree=simplify(tree.leftOperand);
-					return tree;
-				}
-				if(tree.leftOperand.txt=="1" || tree.rightOperand.txt=="0"){
-					tree=operator("1");
-					return tree;
-				}else if(tree.leftOperand.txt=="0"){
-					tree=operator("0");
-					return tree;
-				}
-				
-				
+			if(tree.leftOperand.txt=="1"){
+				tree=simplify(tree.rightOperand);
+				return tree;
 			}
-			if(tree.numOperands==1){
-				tree.operand=simplify(tree.operand);
-			}else{
-				tree.leftOperand=simplify(tree.leftOperand);
-				tree.rightOperand=simplify(tree.rightOperand);
+			if(tree.rightOperand.txt=="1"){
+				tree=simplify(tree.leftOperand);
+				return tree;
 			}
+		}else if(tree.txt=="^"){
+			
+			if(tree.rightOperand.txt=="1"){
+				tree=simplify(tree.leftOperand);
+				return tree;
+			}
+			if(tree.leftOperand.txt=="1" || tree.rightOperand.txt=="0"){
+				tree=operator("1");
+				return tree;
+			}else if(tree.leftOperand.txt=="0"){
+				tree=operator("0");
+				return tree;
+			}
+			
+			
 		}
+		
+		
+		if(tree.numOperands==1){
+			tree.operand=simplify(tree.operand);
+		}else{
+			tree.leftOperand=simplify(tree.leftOperand);
+			tree.rightOperand=simplify(tree.rightOperand);
+		}
+	
 	}
 	return tree;
 	

@@ -8,7 +8,6 @@ function isVariable(tree){
 	}
 }
 function operator(str,left,right){
-//	console.log(str);
 	if(str==="!"){
 		var op=new Operator(tokenize("-")[0]);
 		op.operand=left;
@@ -40,7 +39,6 @@ function operator(str,left,right){
 }
 
 function Operator(tok){
-//	console.log(tok);
 	this.type=tok.type;
 	this.txt=tok.txt;
 	this.numOperands=tok.operands;
@@ -135,9 +133,9 @@ function Operator(tok){
 		if(this.txt=="+"){
 			result=operator("+",derivative(left),derivative(right));
 		}else if(this.txt=="*"){
-			result=operator("*",
-					operator("+",left,derivative(right)),
-					operator("+",right,derivative(left))
+			result=operator("+",
+					operator("*",left,derivative(right)),
+					operator("*",right,derivative(left))
 			);
 		}else if(this.txt=="-"){
 			result=operator("-",derivative(left),derivative(right));
@@ -260,6 +258,7 @@ function Operator(tok){
 	};
 }
 function Operand(tok){
+		
 	if(tok.type==0){
 		this.isVariable=true;
 		this.value=null;
