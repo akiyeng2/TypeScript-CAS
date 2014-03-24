@@ -222,8 +222,8 @@ function toTree(array){
 			}else{
 				var right=stack.pop();
 				var left=stack.pop();
-				operator.leftOperand=left;
-				operator.rightOperand=right;
+				operator.left=left;
+				operator.right=right;
 			}
 			stack.push(operator);
 		}
@@ -260,8 +260,8 @@ function postfix(tree,stack){
 		stack.push(tree);
 	}else if(tree instanceof Operator){
 		if(tree.numOperands==2){
-			var left=postfix(tree.leftOperand,stack);
-			var right=postfix(tree.rightOperand,stack);
+			var left=postfix(tree.left,stack);
+			var right=postfix(tree.right,stack);
 			stack.push(left,right);
 			stack.push(tree);
 		}else{
@@ -303,8 +303,8 @@ function toInfix(postfix){
 				var right=stack.pop();
 
 				var left=stack.pop();	
-				op.leftOperand=left;
-				op.rightOperand=right;
+				op.left=left;
+				op.right=right;
 				
 				op.txt="("+left.txt+token.txt+right.txt+")";
 			}else{
