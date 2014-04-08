@@ -18,3 +18,6 @@ Expression.prototype.evaluate=function(variables){
 Expression.prototype.differentiate=function(){
 	return this.tree.differentiate();
 };
+Expression.prototype.standardize=function(){
+	return this.tree.makeCommutative().standardize([]);
+};

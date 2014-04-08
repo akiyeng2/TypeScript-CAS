@@ -17,7 +17,7 @@ function Operand(tok){
 }
 Operand.prototype.toString=function(){
 	return this.txt;
-}
+};
 Operand.prototype.evaluate=function(){
 	return this.value;
 };

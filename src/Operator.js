@@ -46,7 +46,7 @@ function Operator(tok){
 	this.numOperands=tok.operands;
 	this.precedence=tok.precedence;
 	this.associativity=tok.associativity;
-
+	this.operands=[];
 	if(this.numOperands==1){
 		this.operand;
 	}else{
@@ -58,12 +58,15 @@ function Operator(tok){
 
 	
 }
-
+Operator.prototype.toString=function(){
+	return displayTree(this);
+	
+};
 Operator.prototype.evaluate=function(variables){
 	if(this.numOperands==1){
 		var left=this.operand.evaluate();
 	}else{
-		console.log(this);	
+	//	console.log(this);	
 		var left=this.left.evaluate();
 		var right=this.right.evaluate();
 	}

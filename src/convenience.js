@@ -32,3 +32,8 @@ function tree(expression){
 function displayTree(tree){
 	return stringy(toInfix(toPostfix(tree)));
 }
+function unitTest(){
+	var expression=new Expression("1/2");
+	
+	console.log(displayTree(expression.tree.makeCommutative()));
+}

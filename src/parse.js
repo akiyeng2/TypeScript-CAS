@@ -254,7 +254,6 @@ function toTree(array){
  */
 
 function postfix(tree,stack){
-//	console.log(stack.getArray());
 	
 	if(tree instanceof Operand){
 		stack.push(tree);
@@ -288,7 +287,6 @@ function toPostfix(tree){
 }
 
 function toInfix(postfix){
-//	console.log(postfix);
 	var stack=new Stack();
 
 	for(var i=0;i<postfix.length;i++){
@@ -311,8 +309,11 @@ function toInfix(postfix){
 				
 				var left=stack.pop();
 				op.operand=left;
-			
-				op.txt=op.txt+"("+left.txt+")";
+				if(op.txt!=="!"){
+					op.txt=op.txt+" "+left.txt;
+				}else{
+					op.txt="-"+left.txt;
+				}
 			}
 			stack.push(op);
 		}

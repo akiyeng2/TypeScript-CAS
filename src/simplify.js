@@ -1,22 +1,30 @@
-
 function decimalPlaces(number) {
 	return ((+number).toFixed(20)).replace(/^-?\d*\.?|0+$/g, '').length
 }
 function equals(tree1,tree2){
 //	if(tree1 instanceof Operator)
 }
-function makeCommutative(tree){
-	if(tree instanceof Operand){
-		return tree;
-	}else{
-		if(tree.txt=="-"){
-			return operator("+",tree.left,
-					operator("!",tree.right));
-		}else if(tree.txt=="/"){
-			return operator("*",tree.right)
-		}
+Operator.prototype.makeCommutative=function(){
+	if(this.txt=="-"){
+		this.txt=="+";
+		this.left=this.left.makeCommutative();
+		this.right=operator("!",this.right.makeCommutative());
+
+		
+	}else if(this.txt=="/"){
+		this=operator("*",this.left.makeCommutative(),
+				operator("^",this.right.makeCommutative(),
+						operator("!",operator("1"))));
 	}
+	return this;
 }
+
+Operand.prototype.makeCommutative=function(){
+	return this;
+};
+
+
+
 function order(tree){
 	if(tree instanceof Operand){
 		return tree;
@@ -114,8 +122,48 @@ function simplifier(tree){
 	}while(displayTree(tree)!=displayTree(lastTree));
 	return lastTree;
 }
+/*
+ * Original: 1+2+3*4*5
+ * Desired:  add(1,2,multiply(3,4,5))
+ * 
+ *  Tree:
+ *  
+ *  	+
+ *     / \
+ *    1   +
+ *       / \
+ *      2   *
+ *         / \
+ *        3   *
+ *           / \
+ *          4   5
+ *          
+ *  Desired tree:
+ *  
+ *  		+
+ *        / | \
+ *       1  2  *
+ *           / | \
+ *          3  4  5
+ *  Start with an empty array
+ *  function operand.addition(array){
+ *  	return this
+ *  }
+ *  function operator.addition(array)    
+ *  	if this is addition
+ *  		push left.addition(array) and right.addition(array) to the array
+ *  	otherwise
+ *  		push this onto the array
+ *  		set operands to [left.addition([]),right.addition([])]
+ *  		
+ *  	
+ *  	
+ */           
+ 
+Operator.prototype.standardize=function(){
+	
+}
 
-
-
-
-
+Operand.prototype.standardize=function(){
+	return this;
+}
