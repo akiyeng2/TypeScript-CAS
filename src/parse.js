@@ -23,8 +23,10 @@ function tokenize(expression) {
 	while (rtok.lastIndex < expression.length) {
 
 		var match = rtok.exec(expression);
-		/*Make sure we found a token, and that we found
-		one without skipping garbage*/
+		/*
+		 * Make sure we found a token, and that we found one without skipping
+		 * garbage
+		 */
 
 		if (!match || rtok.lastIndex - match[0].length !== p)
 			throw new SyntaxError();
@@ -34,6 +36,7 @@ function tokenize(expression) {
 			if (match[i]) {
 				var type, precedence = null, associativity = null, operands = null, txt = match[i];
 				if (i == FUNCTION) {
+					
 					if (match[i].length == 1) {
 						type = VARIABLE;
 						if (match[i] == "e" || match[i] == "pi") {
@@ -92,6 +95,15 @@ function tokenize(expression) {
 			}
 		}
 	}
+	
+	var multiply = {"id":6,"txt":"*","type":4,"associativity":0,"precedence":5,"operands":2}
+	for(var i = 1; i < toks.length;) {
+		if(toks[i].type == FUNCTION || toks[i].type==VARIABLE && toks[i-1].type == NUMBER) {
+			toks.splice(i, 0, multiply);
+		}else{
+			i++;
+		}
+	}
 	return toks;
 }
 
@@ -128,7 +140,6 @@ function shunt(expression) {
 			}
 			stack.push(token);
 		} else if (token.type == OPEN_PARENTHESIS) {
-
 			stack.push(token);
 		} else if (token.type == CLOSE_PARENTHESIS) {
 			while (stack.peek() !== undefined
