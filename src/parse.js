@@ -210,12 +210,15 @@ function toTree(array) {
 		if (token.type == VARIABLE || token.type == NUMBER) {
 			stack.push(new Operand(token));
 		} else if (token.type == FUNCTION || token.type == OPERATOR) {
-			var operator = new Operator(token);
+			
 
-			var numOperands = operator.numOperands;
+			var numOperands = token.operands;
 			if (numOperands == 1) {
+				var operator = new Unary(token);
 				operator.operand = stack.pop();
 			} else {
+				
+				var operator = new Binary(token);
 				var right = stack.pop();
 				var left = stack.pop();
 				operator.left = left;

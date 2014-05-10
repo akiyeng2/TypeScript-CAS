@@ -1,18 +1,22 @@
-function Operand(tok){
-	if(tok.type==0){
+function Operand(token){
+	if(typeof token == "string") {
+		token = tokenize(token)[0];
+	}
+	if(token.type==0){
 		this.isVariable=true;
 		this.value=null;
-	}else if(tok.type==5){
+	}else if(token.type==5){
 		this.isVariable=false;
-		if(tok.txt=="e"){
+		if(token.txt=="e"){
 			this.value=Math.E;
-		}else if(tok.txt=="pi"){
+		}else if(token.txt=="pi"){
 			this.value=Math.PI;
 		}else{
-			this.value=parseFloat(tok.txt,10);
+			this.value=parseFloat(token.txt,10);
 		}
 	}
-	this.txt=tok.txt;
+	this.txt=token.txt;
+	
 
 }
 Operand.prototype.toString=function(){
