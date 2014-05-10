@@ -39,10 +39,12 @@ function tokenize(expression) {
 
 					if (match[i].length == 1) {
 						type = VARIABLE;
-						if (match[i] == "e" || match[i] == "pi") {
+						if (match[i] == "e") {
 							type = NUMBER;
 						}
 
+					} else if (match[i] == "pi") {
+						type = NUMBER;
 					} else {
 						type = FUNCTION;
 						operands = 1;
@@ -210,14 +212,13 @@ function toTree(array) {
 		if (token.type == VARIABLE || token.type == NUMBER) {
 			stack.push(new Operand(token));
 		} else if (token.type == FUNCTION || token.type == OPERATOR) {
-			
 
 			var numOperands = token.operands;
 			if (numOperands == 1) {
 				var operator = new Unary(token);
 				operator.operand = stack.pop();
 			} else {
-				
+
 				var operator = new Binary(token);
 				var right = stack.pop();
 				var left = stack.pop();
