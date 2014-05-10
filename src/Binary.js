@@ -80,7 +80,7 @@ Binary.prototype.differentiate = function() {
 
 	var dLeft = this.left.differentiate();
 	var dRight = this.right.differentiate();
-	var result;
+	var result = null;
 	if(this.txt == "+") {
 		result = new Binary("+", dLeft, dRight);
 	}

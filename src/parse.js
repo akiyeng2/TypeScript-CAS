@@ -235,79 +235,21 @@ function toTree(array) {
 	}
 }
 
-/*
- * We haz tree add / \ 1 divide / \ 4 2
- * 
- * wanted result: add 1 divide 4 2 We haz a stack if it is an operator push it
- * to the stack push left and right to the stack as well otherwise push the tree
- * to the stack
- */
-
-function postfix(tree, stack) {
-
-	if (tree instanceof Operand) {
-		stack.push(tree);
-	} else if (tree instanceof Binary) {
-		var left = postfix(tree.left, stack);
-		var right = postfix(tree.right, stack);
-		stack.push(left, right);
-		stack.push(tree);
-	} else if (tree instanceof Unary) {
-
-		var left = postfix(tree.operand, stack);
-		stack.push(left);
-		stack.push(tree);
-
-	}
-	return stack;
-
-}
-function toPostfix(tree) {
-	var arr = postfix(tree, new Stack());
-	var array = [];
-	while (!arr.empty()) {
-		var steve = arr.pop();
-		if (!(steve instanceof Stack)) {
-			array.push(steve);
-		}
-	}
-	return array.reverse();
-}
-
-/*
- * Tree: 
- * 		*
- * 	   / \
- * 	  +   \
- *   / \   \
- *  1   2   +
- *         / \
- *        3   4 
- * Desired infix expression: (1+2)*(3+4)
- * * precedence: 5
- * + precedence: 1
- * 
- * Put parens when the parent operator has a higher precedence than the current operator
- * 
- */
-
-
 function toInfix(tree, str, prec) {
 	infix = str || "";
 	precedence = prec || 0;
 	var result;
-	if(tree instanceof Operand) {
+	if (tree instanceof Operand) {
 		result = tree.txt;
-	}else if(tree instanceof Binary) {
-		if(tree.precedence < precedence) {
-			result = "(" + toInfix(tree.left, str, tree.precedence) + tree.txt + toInfix(tree.right, str, tree.precedence) + ")";
-		}else {
-			result = toInfix(tree.left, str, tree.precedence) + tree.txt + toInfix(tree.right, str, tree.precedence);
+	} else if (tree instanceof Binary) {
+		if (tree.precedence < precedence) {
+			result = "(" + toInfix(tree.left, str, tree.precedence) + tree.txt
+					+ toInfix(tree.right, str, tree.precedence) + ")";
+		} else {
+			result = toInfix(tree.left, str, tree.precedence) + tree.txt
+					+ toInfix(tree.right, str, tree.precedence);
 		}
 	}
 	console.log(result);
 	return result;
-	
-	
-	
 }
