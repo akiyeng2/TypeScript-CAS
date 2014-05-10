@@ -36,7 +36,7 @@ function tokenize(expression) {
 			if (match[i]) {
 				var type, precedence = null, associativity = null, operands = null, txt = match[i];
 				if (i == FUNCTION) {
-					
+
 					if (match[i].length == 1) {
 						type = VARIABLE;
 						if (match[i] == "e" || match[i] == "pi") {
@@ -95,13 +95,21 @@ function tokenize(expression) {
 			}
 		}
 	}
-	
-	var multiply = {"id":6,"txt":"*","type":4,"associativity":0,"precedence":5,"operands":2}
-	for(var i = 1; i < toks.length;) {
-		if((toks[i].type == FUNCTION || toks[i].type==VARIABLE) && toks[i-1].type == NUMBER) {
-			
-			toks.splice(i, 0, multiply); 
-		} else{
+
+	var multiply = {
+		"id" : 6,
+		"txt" : "*",
+		"type" : 4,
+		"associativity" : 0,
+		"precedence" : 5,
+		"operands" : 2
+	}
+	for ( var i = 1; i < toks.length;) {
+		if ((toks[i].type == FUNCTION || toks[i].type == VARIABLE)
+				&& toks[i - 1].type == NUMBER) {
+
+			toks.splice(i, 0, multiply);
+		} else {
 			i++;
 		}
 	}
