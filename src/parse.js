@@ -247,17 +247,16 @@ function postfix(tree, stack) {
 
 	if (tree instanceof Operand) {
 		stack.push(tree);
-	} else if (tree instanceof Operator) {
-		if (tree.numOperands == 2) {
-			var left = postfix(tree.left, stack);
-			var right = postfix(tree.right, stack);
-			stack.push(left, right);
-			stack.push(tree);
-		} else {
-			var left = postfix(tree.operand, stack);
-			stack.push(left);
-			stack.push(tree);
-		}
+	} else if (tree instanceof Binary) {
+		var left = postfix(tree.left, stack);
+		var right = postfix(tree.right, stack);
+		stack.push(left, right);
+		stack.push(tree);
+	} else if (tree instanceof Unary) {
+
+		var left = postfix(tree.operand, stack);
+		stack.push(left);
+		stack.push(tree);
 
 	}
 	return stack;
@@ -275,38 +274,40 @@ function toPostfix(tree) {
 	return array.reverse();
 }
 
-function toInfix(postfix) {
-	var stack = new Stack();
+/*
+ * Tree: 
+ * 		*
+ * 	   / \
+ * 	  +   \
+ *   / \   \
+ *  1   2   +
+ *         / \
+ *        3   4 
+ * Desired infix expression: (1+2)*(3+4)
+ * * precedence: 5
+ * + precedence: 1
+ * 
+ * Put parens when the parent operator has a higher precedence than the current operator
+ * 
+ */
 
-	for ( var i = 0; i < postfix.length; i++) {
-		var token = postfix[i];
-		if (token instanceof Operand) {
-			stack.push(token);
-		} else {
-			var op = new Operator(token);
 
-			if (token.numOperands == 2) {
-
-				var right = stack.pop();
-
-				var left = stack.pop();
-				op.left = left;
-				op.right = right;
-
-				op.txt = "(" + left.txt + token.txt + right.txt + ")";
-			} else {
-
-				var left = stack.pop();
-				op.operand = left;
-				if (op.txt !== "!") {
-					op.txt = op.txt + " " + left.txt;
-				} else {
-					op.txt = "-" + left.txt;
-				}
-			}
-			stack.push(op);
+function toInfix(tree, str, prec) {
+	infix = str || "";
+	precedence = prec || 0;
+	var result;
+	if(tree instanceof Operand) {
+		result = tree.txt;
+	}else if(tree instanceof Binary) {
+		if(tree.precedence < precedence) {
+			result = "(" + toInfix(tree.left, str, tree.precedence) + tree.txt + toInfix(tree.right, str, tree.precedence) + ")";
+		}else {
+			result = toInfix(tree.left, str, tree.precedence) + tree.txt + toInfix(tree.right, str, tree.precedence);
 		}
-
 	}
-	return stack.getArray();
+	console.log(result);
+	return result;
+	
+	
+	
 }

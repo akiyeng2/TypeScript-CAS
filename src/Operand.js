@@ -28,5 +28,5 @@ Operand.prototype.evaluate = function() {
 	return this.value;
 };
 Operand.prototype.differentiate = function() {
-	return (this.variable) ? operator("1") : operator("0");
+	return (this.variable) ? new Operand("1") : new Operand("0");
 };
