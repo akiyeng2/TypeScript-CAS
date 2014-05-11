@@ -151,7 +151,6 @@ function Unary(token, operand) {
 	if (typeof token === "string") {
 		token = uOps[token];
 	}
-
 	this.txt = token.txt;
 	this.operand = operand || null;
 

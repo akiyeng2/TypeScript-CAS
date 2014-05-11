@@ -62,13 +62,11 @@ function tokenize(expression) {
 					} else if (i == SUBTRACTION) {
 						precedence = 1;
 						associativity = LEFT_ASSOCIATIVE;
-						var previous = (toks.length > 0) ? toks[toks.length - 1]
-								: null;
-						if (toks.length == 0 || previous.type == 4
-								|| previous.type == 2) {
+						var previous = (toks.length > 0) ? toks[toks.length - 1] : null;
+						if (toks.length == 0 || previous.type == 4 || previous.type == 2) {
 							precedence = 50;
 							associativity = RIGHT_ASSOCIATIVE;
-							txt = "!";
+							txt = "-";
 							operands = 1;
 						}
 					} else if (i == 6 || i == 7) {
@@ -239,17 +237,20 @@ function toInfix(tree, str, prec) {
 	infix = str || "";
 	precedence = prec || 0;
 	var result;
+	
 	if (tree instanceof Operand) {
 		result = tree.txt;
 	} else if (tree instanceof Binary) {
+
 		if (tree.precedence < precedence) {
 			result = "(" + toInfix(tree.left, str, tree.precedence) + tree.txt
 					+ toInfix(tree.right, str, tree.precedence) + ")";
 		} else {
+
 			result = toInfix(tree.left, str, tree.precedence) + tree.txt
 					+ toInfix(tree.right, str, tree.precedence);
 		}
 	}
-	console.log(result);
+
 	return result;
 }

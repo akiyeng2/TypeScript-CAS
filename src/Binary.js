@@ -11,10 +11,10 @@ function Binary(token, left, right) {
 		},
 		"-" : {
 			"id" : 5,
-			"txt" : "!",
+			"txt" : "-",
 			"type" : 4,
 			"associativity" : 1,
-			"precedence" : 50,
+			"precedence" : 1,
 			"operands" : 1
 		},
 		"*" : {
@@ -77,15 +77,53 @@ Binary.prototype.evaluate = function(variables) {
 };
 
 Binary.prototype.differentiate = function() {
-
+	var left = this.left;
+	var right = this.right;
+	
 	var dLeft = this.left.differentiate();
 	var dRight = this.right.differentiate();
 	var result = null;
 	if(this.txt == "+") {
 		result = new Binary("+", dLeft, dRight);
+	}else if(this.txt == "-") {
+		result = new Binary("-", dLeft, dRight);
+	}else if(this.txt == "*") {
+		result = new Binary("+", 
+				new Binary("*", left, dRight), 
+				new Binary("*", right, dLeft)
+		);
+	}else if(this.txt == "/") {
+		result = new Binary("/", 
+					new Binary("-", 
+							new Binary("*", right, dLeft), 
+							new Binary("*", left, dRight)
+					),
+					new Binary("^", right, new Operand("2"))
+		);
+	}else if(this.txt == "^") {
+		var powerRule = new Binary("*", right, new Binary("^", left, new Binary("-", right, new Operand("1"))));
+
+		
+		var exponentRule = new Binary("*", 
+				new Binary("*", 
+						new Binary("^", left, right),
+						dRight
+				), new Unary("ln", left)
+		);
+		
+		if(left.isVariable() && right.isVariable()) {
+			result = new Binary("+", powerRule, exponentRule);
+		}else if(left.isVariable() && !right.isVariable()) {
+			result = powerRule;
+		}else if(!left.isVariabl() && right.isVariable()) {
+			result = exponentRule;
+		}else{
+			result = new Operand("0");
+		}
+		
 	}
+
 	
-//	console.log(result);
 	return result;
 	
 };

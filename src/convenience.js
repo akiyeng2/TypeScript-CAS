@@ -17,7 +17,7 @@ function evaluateFunction(expression){
 	return Math.round(evaluateTree(toTree(shunt(expression)))*1e10)/1e10;
 }
 function differentiateFunction(expression){
-	return toTree(shunt(expression)).differentiate();
+	return toInfix(toTree(shunt(expression)).differentiate());
 }
 function differentiateFunctionNoSimplify(expression){
 	return (stringy(toInfix(toPostfix(derivative(toTree(shunt(expression)))))));

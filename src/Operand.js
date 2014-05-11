@@ -6,7 +6,7 @@ function Operand(token) {
 		this.variable = true;
 		this.value = null;
 	} else if (token.type == 5) {
-		this.isVariable = false;
+		this.variable = false;
 		if (token.txt == "e") {
 			this.value = Math.E;
 		} else if (token.txt == "pi") {
