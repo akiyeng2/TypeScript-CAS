@@ -230,3 +230,24 @@ Unary.prototype.evaluate = function() {
 	
 	return evaluations[this.txt](operand);
 };
+
+Unary.prototype.differentiate = function(){
+	var dOperand = this.operand.differentiate();
+	var operand = this.operand;
+	var derivatives = {
+			"-": function(operand) {
+				return new Unary("-", dOperand);
+			},
+			
+			"ln": function(operand) {
+				return new Binary("/", dOperand, operand);
+			},
+			
+			"log": function(operand) {
+				return new Binary("/", dOperand, new Binary("*", operand, new Unary("ln", new Operand("10"))));
+			}
+	
+	};
+	
+	return derivatives[this.txt](operand);
+};

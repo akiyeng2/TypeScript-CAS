@@ -236,22 +236,26 @@ function toTree(array) {
 	}
 }
 
-function toInfix(tree, str, prec) {
-	infix = str || "";
-	precedence = prec || 0;
+function toInfix(tree, str, parent) {
+	var infix = str || "";
+	if(parent) {
+		var precedence = parent.precedence;
+	}else {
+		var precedence = 0;
+	}
 	var result;
 
 	if (tree instanceof Operand) {
 		result = tree.txt;
 	} else if (tree instanceof Binary) {
 
-		if (tree.precedence < precedence) {
-			result = "(" + toInfix(tree.left, str, tree.precedence) + tree.txt
-					+ toInfix(tree.right, str, tree.precedence) + ")";
+		if (tree.precedence  < precedence || (tree.precedence == precedence && parent.txt == "/")) {
+			result = "(" + toInfix(tree.left, str, tree) + tree.txt
+					+ toInfix(tree.right, str, tree) + ")";
 		} else {
 
-			result = toInfix(tree.left, str, tree.precedence) + tree.txt
-					+ toInfix(tree.right, str, tree.precedence);
+			result = toInfix(tree.left, str, tree) + tree.txt
+					+ toInfix(tree.right, str, tree);
 		}
 	} else if (tree instanceof Unary) {
 		result = tree.txt + "(" + toInfix(tree.operand)+")";	
