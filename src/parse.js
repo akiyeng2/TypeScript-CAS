@@ -48,6 +48,7 @@ function tokenize(expression) {
 					} else {
 						type = FUNCTION;
 						operands = 1;
+						precedence = 100;
 					}
 				} else if (i == OPEN_PARENTHESIS) {
 					type = OPEN_PARENTHESIS;
@@ -62,8 +63,10 @@ function tokenize(expression) {
 					} else if (i == SUBTRACTION) {
 						precedence = 1;
 						associativity = LEFT_ASSOCIATIVE;
-						var previous = (toks.length > 0) ? toks[toks.length - 1] : null;
-						if (toks.length == 0 || previous.type == 4 || previous.type == 2) {
+						var previous = (toks.length > 0) ? toks[toks.length - 1]
+								: null;
+						if (toks.length == 0 || previous.type == 4
+								|| previous.type == 2) {
 							precedence = 50;
 							associativity = RIGHT_ASSOCIATIVE;
 							txt = "-";
@@ -237,7 +240,7 @@ function toInfix(tree, str, prec) {
 	infix = str || "";
 	precedence = prec || 0;
 	var result;
-	
+
 	if (tree instanceof Operand) {
 		result = tree.txt;
 	} else if (tree instanceof Binary) {
@@ -250,6 +253,8 @@ function toInfix(tree, str, prec) {
 			result = toInfix(tree.left, str, tree.precedence) + tree.txt
 					+ toInfix(tree.right, str, tree.precedence);
 		}
+	} else if (tree instanceof Unary) {
+		result = tree.txt + "(" + toInfix(tree.operand)+")";	
 	}
 
 	return result;

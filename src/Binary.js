@@ -101,7 +101,14 @@ Binary.prototype.differentiate = function() {
 					new Binary("^", right, new Operand("2"))
 		);
 	}else if(this.txt == "^") {
-		var powerRule = new Binary("*", right, new Binary("^", left, new Binary("-", right, new Operand("1"))));
+		var powerRule = new Binary("*", 
+				new Binary("*", right, 
+						new Binary("^", left, 
+								new Binary("-", right, new Operand("1")
+								)
+						)
+				), 
+				dLeft);
 
 		
 		var exponentRule = new Binary("*", 
@@ -115,7 +122,7 @@ Binary.prototype.differentiate = function() {
 			result = new Binary("+", powerRule, exponentRule);
 		}else if(left.isVariable() && !right.isVariable()) {
 			result = powerRule;
-		}else if(!left.isVariabl() && right.isVariable()) {
+		}else if(!left.isVariable() && right.isVariable()) {
 			result = exponentRule;
 		}else{
 			result = new Operand("0");
