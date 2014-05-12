@@ -244,7 +244,63 @@ Unary.prototype.differentiate = function(){
 			},
 			
 			"log": function(operand) {
-				return new Binary("/", dOperand, new Binary("*", operand, new Unary("ln", new Operand("10"))));
+				return new Binary("/", dOperand, 
+						new Binary("*", operand, 
+								new Unary("ln", new Operand("10")
+								)
+						)
+				);
+			},
+			
+			"sin": function(operand) {
+				return new Binary("*", 
+						new Unary("cos", operand), 
+						dOperand		
+				);
+			},
+			
+			"cos": function(operand) {
+				return new Unary("-", 
+						new Binary("*", 
+								new Unary("sin", operand), 
+								dOperand		
+						)
+				);
+			},
+			
+			"tan": function(operand) {
+				return new Binary("*",
+						new Binary("^", 
+								new Unary("sec", operand), new Operand("2")),
+								dOperand);
+			},
+			
+			"csc": function(operand) {
+				return new Binary("*", 
+						new Binary("*", 
+								new Unary("cot", operand), 
+								new Unary("csc", operand)
+						), dOperand
+				);
+			},
+			
+			"sec": function(operand) {
+				return new Binary("*", 
+						new Binary("*", 
+								new Unary("sec", operand), 
+								new Unary("tan", operand)
+						), 
+						dOperand		
+				);
+			},
+			
+			"cot": function(operand) {
+				return new Unary("-", 
+						new Binary("*", 
+								new Binary("^", 
+										new Unary("csc", operand), 
+										new Operand("2")), dOperand)
+				);
 			}
 	
 	};
