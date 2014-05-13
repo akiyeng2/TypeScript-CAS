@@ -285,15 +285,15 @@ function toTex(tree, str, parent) {
 			if(tree.left instanceof Operand) {
 				result = "{{" + toTex(tree.left, str, tree) + "}^{" + toTex(tree.right, str, tree) + "}}";
 			}else {
-				result = "{{(" + toTex(tree.left, str, tree) + ")}^{" + toTex(tree.right, str, tree) + "}}";
+				result = "{{\\left(" + toTex(tree.left, str, tree) + "\\right)}^{" + toTex(tree.right, str, tree) + "}}";
 
 			}
 		}else if(tree.txt == "/") {
 			result = "{\\frac{" + toTex(tree.left, str, tree) + "}" + "{" + toTex(tree.right, str, tree) + "}}";
 
 		}else if (tree.precedence < precedence && parent.txt != "^") {
-			result = "({{" + toTex(tree.left, str, tree)+"}" + tree.txt
-					+ "{" + toTex(tree.right, str, tree) + "}})";
+			result = "\\left({{" + toTex(tree.left, str, tree)+"}" + tree.txt
+					+ "{" + toTex(tree.right, str, tree) + "}}\\right)";
 		} else {
 			result = "{{" + toTex(tree.left, str, tree) + "}" + tree.txt + "{" + toTex(tree.right, str, tree) + "}}";
 		}
