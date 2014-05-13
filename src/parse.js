@@ -48,7 +48,7 @@ function tokenize(expression) {
 					} else {
 						type = FUNCTION;
 						operands = 1;
-						precedence = 100;
+						precedence = 25;
 					}
 				} else if (i == OPEN_PARENTHESIS) {
 					type = OPEN_PARENTHESIS;
@@ -281,10 +281,17 @@ function toTex(tree, str, parent) {
 		result = tree.txt;
 
 	} else if (tree instanceof Binary) {
-		if(tree.txt == "/") {
+		if(tree.txt == "^") {
+			if(tree.left instanceof Operand) {
+				result = "{{" + toTex(tree.left, str, tree) + "}^{" + toTex(tree.right, str, tree) + "}}";
+			}else {
+				result = "{{(" + toTex(tree.left, str, tree) + ")}^{" + toTex(tree.right, str, tree) + "}}";
+
+			}
+		}else if(tree.txt == "/") {
 			result = "{\\frac{" + toTex(tree.left, str, tree) + "}" + "{" + toTex(tree.right, str, tree) + "}}";
 
-		} else if (tree.precedence < precedence) {
+		}else if (tree.precedence < precedence && parent.txt != "^") {
 			result = "({{" + toTex(tree.left, str, tree)+"}" + tree.txt
 					+ "{" + toTex(tree.right, str, tree) + "}})";
 		} else {
