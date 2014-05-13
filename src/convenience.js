@@ -19,7 +19,7 @@ function evaluateFunction(expression){
 function differentiateFunction(expression){
 	var result = toTex(toTree(shunt(expression)).differentiate());
 	document.body.innerHTML = "";
-	document.body.innerHTML+=("$" + result+"$" + "<br>");
+	document.body.innerHTML+=("$\\frac{d}{dx}(" + toTex(tree(expression)) + ")="  + result+"$" + "<br>");
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
 }
