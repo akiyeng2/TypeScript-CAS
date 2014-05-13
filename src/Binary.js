@@ -55,7 +55,7 @@ function Binary(token, left, right) {
 }
 
 Binary.prototype.isVariable = function() {
-	return (this.left.isVariable() && this.right.isVariable());
+	return (this.left.isVariable() || this.right.isVariable());
 };
 
 Binary.prototype.evaluate = function(variables) {
