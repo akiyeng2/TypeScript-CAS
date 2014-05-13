@@ -301,6 +301,38 @@ Unary.prototype.differentiate = function(){
 										new Unary("csc", operand), 
 										new Operand("2")), dOperand)
 				);
+			}, 
+			
+			"arcsin": function(operand) {
+				return new Binary("/",
+						dOperand, 
+						new Unary("sqrt", 
+								new Binary("-", 
+										new Operand("1"), 
+										new Binary("^", 
+												operand, 
+												new Operand("2")
+										)
+								)
+						)
+				);
+			},
+			
+			"arccos": function(operand) {
+				return new Unary("-", 
+						new Binary("/", 
+								dOperand, 
+								new Unary("sqrt", 
+										new Binary("-", 
+												new Operand("1"), 
+												new Binary("^", 
+														operand, 
+														new Operand("2")
+												)
+										)
+								)
+						)
+				);
 			}
 	
 	};
