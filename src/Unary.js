@@ -333,7 +333,70 @@ Unary.prototype.differentiate = function(){
 								)
 						)
 				);
+			},
+			
+			"arctan" : function(operand) {
+				return new Binary("/", 
+						dOperand, 
+						new Binary("+", 
+								new Operand("1"), 
+								new Binary("^", operand, 
+										new Operand("2")
+								)
+						)
+				);
+			},
+			
+			"arccsc": function(operand) {
+				return new Binary("/", 
+						dOperand, 
+						new Binary("*", 
+								new Unary("abs", operand), 
+								new Unary("sqrt", 
+										new Binary("-", 
+												new Binary("^", 
+														operand, 
+														new Operand("2")
+												), 
+												new Operand("1")
+										)
+								)
+						)
+				);
+			},
+			
+			"arcsec": function(operand) {
+				return new Binary("/", 
+						dOperand, 
+						new Binary("*", 
+								new Unary("abs", operand), 
+								new Unary("sqrt", 
+										new Binary("-", 
+												new Binary("^", 
+														operand, 
+														new Operand("2")
+												), 
+												new Operand("1")
+										)
+								)
+						)
+				);
+			},
+			
+			"arccot": function(operand) {
+				return new Unary("-",
+						new Binary("/", 
+								dOperand, 
+								new Binary("+", 
+										new Operand("1"), 
+										new Binary("^", operand, 
+												new Operand("2")
+										)
+								)
+						)
+				);
 			}
+			
 	
 	};
 	
