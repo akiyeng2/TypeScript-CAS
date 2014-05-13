@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-	
-	<title>Parsing</title>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+
+<title>Parsing</title>
 </head>
 <body>
-	<form>
-		Evaluate: <input type="text" id="evaluate"/>
-		<button type="button" onClick='alert(evaluateFunction(document.getElementById("evaluate").value))'>Evaluate</button>
-		<br>
-		Differentiate: <input type="text" id="differentiate"/>
-		<button type="button" onClick='alert(differentiateFunction(document.getElementById("differentiate").value))'>Differentiate</button>
-	</form>
 	
+	<script type="text/javascript"
+		src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script type = "text/x-mathjax-config">
 
+		MathJax.Hub.Config({
+  			tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+		});
+	</script>
 	<script src="src/Queue.js"></script>
 	<script src="src/Stack.js"></script>
 	<script src="src/Unary.js"></script>

@@ -17,7 +17,11 @@ function evaluateFunction(expression){
 	return Math.round(evaluateTree(toTree(shunt(expression)))*1e10)/1e10;
 }
 function differentiateFunction(expression){
-	return toInfix(toTree(shunt(expression)).differentiate());
+	var result = toTex(toTree(shunt(expression)).differentiate());
+	document.body.innerHTML = "";
+	document.body.innerHTML+=("$" + result+"$" + "<br>");
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
 }
 function differentiateFunctionNoSimplify(expression){
 	return (stringy(toInfix(toPostfix(derivative(toTree(shunt(expression)))))));

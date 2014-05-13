@@ -109,12 +109,13 @@ function tokenize(expression) {
 	}
 	for ( var i = 1; i < toks.length;) {
 		if ((toks[i].type == FUNCTION || toks[i].type == VARIABLE)
-				&& (toks[i - 1].type == NUMBER || toks[i-1].type == CLOSE_PARENTHESIS)) {
+				&& (toks[i - 1].type == NUMBER || toks[i - 1].type == CLOSE_PARENTHESIS)) {
 
 			toks.splice(i, 0, multiply);
-		} else if(toks[i].type == OPEN_PARENTHESIS && (toks[i-1].type != OPERATOR && toks[i-1].type != FUNCTION)){
+		} else if (toks[i].type == OPEN_PARENTHESIS
+				&& (toks[i - 1].type != OPERATOR && toks[i - 1].type != FUNCTION)) {
 			toks.splice(i, 0, multiply);
-		} else{
+		} else {
 			i++;
 		}
 	}
@@ -240,9 +241,9 @@ function toTree(array) {
 
 function toInfix(tree, str, parent) {
 	var infix = str || "";
-	if(parent) {
+	if (parent) {
 		var precedence = parent.precedence;
-	}else {
+	} else {
 		var precedence = 0;
 	}
 	var result;
@@ -251,7 +252,8 @@ function toInfix(tree, str, parent) {
 		result = tree.txt;
 	} else if (tree instanceof Binary) {
 
-		if (tree.precedence  < precedence || (tree.precedence == precedence && parent.txt == "/")) {
+		if (tree.precedence < precedence
+				|| (tree.precedence == precedence && parent.txt == "/")) {
 			result = "(" + toInfix(tree.left, str, tree) + tree.txt
 					+ toInfix(tree.right, str, tree) + ")";
 		} else {
@@ -260,8 +262,43 @@ function toInfix(tree, str, parent) {
 					+ toInfix(tree.right, str, tree);
 		}
 	} else if (tree instanceof Unary) {
-		result = tree.txt + "(" + toInfix(tree.operand)+")";	
+		result = tree.txt + "(" + toInfix(tree.operand) + ")";
 	}
 
+	return result;
+}
+
+function toTex(tree, str, parent) {
+	var tex = str || "";
+	if (parent) {
+		var precedence = parent.precedence;
+	} else {
+		var precedence = 0;
+	}
+
+	var result;
+	if (tree instanceof Operand) {
+		result = tree.txt;
+
+	} else if (tree instanceof Binary) {
+		if(tree.txt == "/") {
+			result = "{\\frac{" + toTex(tree.left, str, tree) + "}" + "{" + toTex(tree.right, str, tree) + "}}";
+
+		} else if (tree.precedence < precedence) {
+			result = "({{" + toTex(tree.left, str, tree)+"}" + tree.txt
+					+ "{" + toTex(tree.right, str, tree) + "}})";
+		} else {
+
+			result = "{{" + toTex(tree.left, str, tree) + "}" + tree.txt + "{" + toTex(tree.right, str, tree) + "}}";
+		}
+
+	} else if (tree instanceof Unary) {
+		if (tree.txt == "-") {
+			result = "-{" + toTex(tree.operand) + "}";
+
+		} else {
+			result = "\\" + tree.txt + "{" + toTex(tree.operand) + "}";
+		}
+	}
 	return result;
 }
