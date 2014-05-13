@@ -48,7 +48,7 @@ function tokenize(expression) {
 					} else {
 						type = FUNCTION;
 						operands = 1;
-						precedence = 25;
+						precedence = 100;
 					}
 				} else if (i == OPEN_PARENTHESIS) {
 					type = OPEN_PARENTHESIS;
@@ -295,16 +295,15 @@ function toTex(tree, str, parent) {
 			result = "({{" + toTex(tree.left, str, tree)+"}" + tree.txt
 					+ "{" + toTex(tree.right, str, tree) + "}})";
 		} else {
-
 			result = "{{" + toTex(tree.left, str, tree) + "}" + tree.txt + "{" + toTex(tree.right, str, tree) + "}}";
 		}
 
 	} else if (tree instanceof Unary) {
 		if (tree.txt == "-") {
-			result = "-{" + toTex(tree.operand) + "}";
+			result = "-{" + toTex(tree.operand, str, tree) + "}";
 
 		} else {
-			result = "\\" + tree.txt + "{" + toTex(tree.operand) + "}";
+			result = "\\" + tree.txt + "{" + toTex(tree.operand, str, tree) + "}";
 		}
 	}
 	return result;
