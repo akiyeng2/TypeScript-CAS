@@ -109,10 +109,12 @@ function tokenize(expression) {
 	}
 	for ( var i = 1; i < toks.length;) {
 		if ((toks[i].type == FUNCTION || toks[i].type == VARIABLE)
-				&& toks[i - 1].type == NUMBER) {
+				&& (toks[i - 1].type == NUMBER || toks[i-1].type == CLOSE_PARENTHESIS)) {
 
 			toks.splice(i, 0, multiply);
-		} else {
+		} else if(toks[i].type == OPEN_PARENTHESIS && (toks[i-1].type != OPERATOR && toks[i-1].type != FUNCTION)){
+			toks.splice(i, 0, multiply);
+		} else{
 			i++;
 		}
 	}
