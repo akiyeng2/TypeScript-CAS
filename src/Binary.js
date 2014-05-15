@@ -59,8 +59,8 @@ Binary.prototype.isVariable = function() {
 };
 
 Binary.prototype.evaluate = function(variables) {
-	var left = this.left.evaluate();
-	var right = this.right.evaluate();
+	var left = this.left.evaluate(variables);
+	var right = this.right.evaluate(variables);
 	if (this.txt == "+") {
 		return left + right;
 	} else if (this.txt == "-") {

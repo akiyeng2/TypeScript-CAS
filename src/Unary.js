@@ -13,7 +13,7 @@ function Unary(token, operand) {
 			"txt" : "sin",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"cos" : {
@@ -21,7 +21,7 @@ function Unary(token, operand) {
 			"txt" : "cos",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"tan" : {
@@ -29,7 +29,7 @@ function Unary(token, operand) {
 			"txt" : "tan",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"csc" : {
@@ -37,7 +37,7 @@ function Unary(token, operand) {
 			"txt" : "csc",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"sec" : {
@@ -45,7 +45,7 @@ function Unary(token, operand) {
 			"txt" : "sec",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"cot" : {
@@ -53,7 +53,7 @@ function Unary(token, operand) {
 			"txt" : "cot",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 
@@ -62,7 +62,7 @@ function Unary(token, operand) {
 			"txt" : "arcsin",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"arccos" : {
@@ -70,7 +70,7 @@ function Unary(token, operand) {
 			"txt" : "arccos",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"arctan" : {
@@ -78,7 +78,7 @@ function Unary(token, operand) {
 			"txt" : "arctan",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"arccsc" : {
@@ -86,7 +86,7 @@ function Unary(token, operand) {
 			"txt" : "arccsc",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"arcsec" : {
@@ -94,7 +94,7 @@ function Unary(token, operand) {
 			"txt" : "arcsec",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"arccot" : {
@@ -102,7 +102,7 @@ function Unary(token, operand) {
 			"txt" : "arccot",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 
@@ -111,7 +111,7 @@ function Unary(token, operand) {
 			"txt" : "log",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"ln" : {
@@ -119,7 +119,7 @@ function Unary(token, operand) {
 			"txt" : "ln",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"sqrt" : {
@@ -127,7 +127,7 @@ function Unary(token, operand) {
 			"txt" : "sqrt",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"abs" : {
@@ -135,7 +135,7 @@ function Unary(token, operand) {
 			"txt" : "abs",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"log" : {
@@ -143,7 +143,7 @@ function Unary(token, operand) {
 			"txt" : "log",
 			"type" : 1,
 			"associativity" : null,
-			"precedence" : null,
+			"precedence" : 100,
 			"operands" : 1
 		}
 
@@ -163,8 +163,8 @@ Unary.prototype.isVariable = function() {
 	return this.operand.isVariable();
 };
 
-Unary.prototype.evaluate = function() {
-	var operand = this.operand.evaluate();
+Unary.prototype.evaluate = function(vars) {
+	var operand = this.operand.evaluate(vars);
 
 	var evaluations = {
 		"-" : function(operand) {
@@ -248,6 +248,16 @@ Unary.prototype.differentiate = function(){
 						new Binary("*", operand, 
 								new Unary("ln", new Operand("10")
 								)
+						)
+				);
+			},
+			
+			"sqrt": function(operand) {
+				return new Binary("/", 
+						dOperand, 
+						new Binary("*", 
+								new Operand("2"), 
+								new Unary("sqrt", operand)
 						)
 				);
 			},

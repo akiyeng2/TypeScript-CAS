@@ -295,6 +295,7 @@ function toTex(tree, str, parent) {
 			result = "\\left({{" + toTex(tree.left, str, tree)+"}" + tree.txt
 					+ "{" + toTex(tree.right, str, tree) + "}}\\right)";
 		} else {
+
 			result = "{{" + toTex(tree.left, str, tree) + "}" + tree.txt + "{" + toTex(tree.right, str, tree) + "}}";
 		}
 
