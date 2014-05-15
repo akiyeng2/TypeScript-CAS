@@ -26,7 +26,12 @@ Operand.prototype.toString = function() {
 };
 Operand.prototype.evaluate = function(variables) {
 	if(this.variable) {
-		return variables[this.txt];
+		var value = variables[this.txt];
+		if(typeof value == "number") {
+			return value;
+		}else{
+			return tree(value).evaluate();
+		}
 	}
 	return this.value;
 };
