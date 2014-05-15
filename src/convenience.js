@@ -13,8 +13,8 @@ function stringy(arr){
 	}
 	return str;
 }
-function evaluateFunction(expression){
-	return Math.round(evaluateTree(toTree(shunt(expression)))*1e10)/1e10;
+function evaluateFunction(expression, variables){
+	return Math.round(tree(expression).evaluate(variables)*1e10)/1e10;
 }
 function differentiateFunction(expression){
 	var result = toTex(toTree(shunt(expression)).differentiate());

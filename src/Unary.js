@@ -163,8 +163,8 @@ Unary.prototype.isVariable = function() {
 	return this.operand.isVariable();
 };
 
-Unary.prototype.evaluate = function(vars) {
-	var operand = this.operand.evaluate(vars);
+Unary.prototype.evaluate = function(variables) {
+	var operand = this.operand.evaluate(variables);
 
 	var evaluations = {
 		"-" : function(operand) {

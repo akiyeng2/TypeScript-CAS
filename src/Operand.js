@@ -24,7 +24,10 @@ Operand.prototype.isVariable = function() {
 Operand.prototype.toString = function() {
 	return this.txt;
 };
-Operand.prototype.evaluate = function() {
+Operand.prototype.evaluate = function(variables) {
+	if(this.variable) {
+		return variables[this.txt];
+	}
 	return this.value;
 };
 Operand.prototype.differentiate = function() {
