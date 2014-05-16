@@ -1,3 +1,4 @@
+ 
 function Equation(expression) {
 	this.tree = null;
 	if(typeof expression == "string") {
@@ -62,7 +63,7 @@ Equation.prototype.zero = function(lower, upper, guess, tolerance) {
 	
 
 		return {
-		"solution" : Math.round(x1 * 1e10) / 1e10,
+		"solution" : x1,
 		"tolerance" : solution,
 		"error": this.evaluate({"x": x1})
 	};
@@ -72,7 +73,9 @@ Equation.prototype.zero = function(lower, upper, guess, tolerance) {
 
 Equation.prototype.optimize = function(lower, upper, subintervals) {
 	var n = subintervals || 100;
+
 	var size = (upper - lower)/n;
+
 	var df = this.differentiate();
 	var yPrime = NaN;
 	var lastYPrime = NaN;
@@ -80,7 +83,8 @@ Equation.prototype.optimize = function(lower, upper, subintervals) {
 	    return typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
 	};
 	var spots = [];
-	for(var x = lower; x <= upper+size; x+=size) {
+	
+	for(var x = lower; x < upper; x+=size) {
 		 yPrime = df.evaluate({"x": x});
 		 if(sign(yPrime) == -1 * sign(lastYPrime)) {
 			 spots.push(x);
@@ -89,16 +93,64 @@ Equation.prototype.optimize = function(lower, upper, subintervals) {
 		 lastYPrime = yPrime;
 		
 	}
-	return spots.map(function(x) {
+
+	spots = spots.map(function(x) {
 		var zero = df.zero(x-size, x+size , x);
-		if(zero.tolerance) {
+
+		if(zero.tolerance) {	
 			return zero.solution;
+		} else if(x < 1e-10 || zero.solution < 1e-14) {
+			return 0;
 		}
 	});
+	if(Math.abs(df.evaluate({"x": upper})) < 1e-14) {
+		spots.push(upper);
+	}
+	
+	if(Math.abs(df.evaluate({"x": lower})) < 1e-14) {
+		spots.unshift(lower);
+	}
+	return spots.filter(function(elem, pos) {
+	    return spots.indexOf(elem) == pos;
+	});
+	
+
 };
 
 Equation.prototype.solve = function(curve, lower, upper, guess, tolerance) {
 	var toSolve = new Equation(new Binary("-", this.tree, curve.tree));
 	return toSolve.zero(lower, upper, guess, tolerance || 1e-14);
-};
+}; 
 
+Equation.prototype.criticals = function(lower, upper, subintervals) {
+	var criticals = this.optimize(lower, upper, (subintervals || 100));
+	var criticalIntervals  = [];
+	var sign = function(x) {
+	    return typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
+	};
+	if(Math.abs(criticals[0] - lower) > 1e-10) {
+		criticals.unshift(lower);
+	}
+	
+	if(Math.abs(criticals[criticals.length-1] - upper) > 1e-10) {
+		criticals.push(upper);
+	}
+	var numIntervals = 0;
+	for(var i = 0; i < criticals.length - 1; i++) {
+		var sgn = sign(this.differentiate().evaluate({"x": (criticals[i]+criticals[i+1])/2}));
+		var prevSign = 0;
+		if(numIntervals.length > 0) {
+			prevSign = criticalIntervals[numIntervals - 1];
+		}
+		if(prevSign == sgn) {
+			criticalIntervals[numIntervals - 1].upper = criticals[i+1];
+		}else{
+			criticalIntervals.push({"lower": criticals[i], "upper": criticals[i+1], "sign": sgn});
+			numIntervals++;
+		}
+		
+	}
+	
+	return criticalIntervals;
+}; 
+f = new Equation("sin(x)");
