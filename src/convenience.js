@@ -56,3 +56,6 @@ function unitTest(){
 	
 	console.log(displayTree(expression.tree.makeCommutative()));
 }
+function solve(first, second, guess) {
+	return new Equation(first).solve(new Equation(second), -10, 10, guess);
+}
