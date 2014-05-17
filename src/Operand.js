@@ -30,7 +30,7 @@ Operand.prototype.evaluate = function(variables) {
 		if(typeof value == "number") {
 			return value;
 		}else{
-			return tree(value).evaluate();
+			return tree(value).evaluate(variables);
 		}
 	}
 	return this.value;

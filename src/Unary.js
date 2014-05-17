@@ -164,13 +164,21 @@ Unary.prototype.isVariable = function() {
 };
 
 Unary.prototype.evaluate = function(variables) {
+
 	var operand = this.operand.evaluate(variables);
 
 	var evaluations = {
 		"-" : function(operand) {
 			return -operand;
 		},
-
+		"abs" : function(operand) {
+			return Math.abs(operand);
+		},
+		
+		"sqrt" : function(operand) {
+			return Math.sqrt(operand);
+		},
+		
 		"ln" : function(operand) {
 			return Math.log(operand);
 		},
