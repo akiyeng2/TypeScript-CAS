@@ -177,4 +177,4 @@ Equation.prototype.criticals = function(lower, upper, subintervals) {
 
 	return criticalIntervals;
 };
-f = new Equation("sin(x)");
+pi = Math.PI;
