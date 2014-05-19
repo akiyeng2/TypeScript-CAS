@@ -7,7 +7,7 @@ function Equation(expression) {
 		this.tree = expression;
 	}
 }
-
+Equation.prototype.epsilon = 1e-14;
 Equation.prototype.toString = function() {
 	return toInfix(this.tree);
 };
