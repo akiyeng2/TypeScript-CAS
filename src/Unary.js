@@ -159,8 +159,8 @@ function Unary(token, operand) {
 
 }
 
-Unary.prototype.isVariable = function() {
-	return this.operand.isVariable();
+Unary.prototype.isVariable = function(wrt) {
+	return this.operand.isVariable(wrt);
 };
 
 Unary.prototype.evaluate = function(variables) {
@@ -239,8 +239,8 @@ Unary.prototype.evaluate = function(variables) {
 	return evaluations[this.txt](operand);
 };
 
-Unary.prototype.differentiate = function(){
-	var dOperand = this.operand.differentiate();
+Unary.prototype.differentiate = function(wrt){
+	var dOperand = this.operand.differentiate(wrt);
 	var operand = this.operand;
 	var derivatives = {
 			"-": function(operand) {

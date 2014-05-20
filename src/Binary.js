@@ -54,8 +54,8 @@ function Binary(token, left, right) {
 	this.precedence = token.precedence;
 }
 
-Binary.prototype.isVariable = function() {
-	return (this.left.isVariable() || this.right.isVariable());
+Binary.prototype.isVariable = function(wrt) {
+	return (this.left.isVariable(wrt) || this.right.isVariable(wrt));
 };
 
 Binary.prototype.evaluate = function(variables) {
@@ -76,12 +76,12 @@ Binary.prototype.evaluate = function(variables) {
 	}
 };
 
-Binary.prototype.differentiate = function() {
+Binary.prototype.differentiate = function(wrt) {
 	var left = this.left;
 	var right = this.right;
 	
-	var dLeft = this.left.differentiate();
-	var dRight = this.right.differentiate();
+	var dLeft = this.left.differentiate(wrt);
+	var dRight = this.right.differentiate(wrt);
 	var result = null;
 	if(this.txt == "+") {
 		result = new Binary("+", dLeft, dRight);

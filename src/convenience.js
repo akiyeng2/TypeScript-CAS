@@ -16,8 +16,8 @@ function stringy(arr){
 function evaluateFunction(expression, variables){
 	return Math.round(tree(expression).evaluate(variables)*1e10)/1e10;
 }
-function differentiateFunction(expression){
-	var result = toTex(toTree(shunt(expression)).differentiate());
+function differentiateFunction(expression, wrt){
+	var result = toTex(toTree(shunt(expression)).differentiate(wrt));
 	document.body.innerHTML = "";
 	document.body.innerHTML+=("$$\\frac{d}{dx}\\left(" + toTex(tree(expression)) + "\\right)="  + result+"$$" + "<br>");
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);

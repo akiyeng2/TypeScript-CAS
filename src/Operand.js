@@ -18,8 +18,8 @@ function Operand(token) {
 	this.txt = token.txt;
 
 }
-Operand.prototype.isVariable = function() {
-	return this.variable;
+Operand.prototype.isVariable = function(wrt) {
+	return (this.variable && this.txt == wrt);
 };
 Operand.prototype.toString = function() {
 	return this.txt;
@@ -35,6 +35,10 @@ Operand.prototype.evaluate = function(variables) {
 	}
 	return this.value;
 };
-Operand.prototype.differentiate = function() {
-	return (this.variable) ? new Operand("1") : new Operand("0");
+Operand.prototype.differentiate = function(wrt) {
+	if(this.variable && this.txt == wrt) {
+		return new Operand("1");
+	} else {
+		return new Operand("0");
+	}
 };
