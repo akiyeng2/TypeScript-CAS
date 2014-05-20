@@ -1,17 +1,35 @@
+/**
+ * @constructor
+ * 
+ * @param {String|Tree} expression The equation in string form or tree form
+ */
 function Equation(expression) {
 	this.tree = null;
 	if (typeof expression == "string") {
 		this.tree = toTree(shunt(expression));
-	} else if (expression instanceof Binary || expression instanceof Unary
-			|| expression instanceof Operand) {
+	} else if (expression instanceof Binary || expression instanceof Unary || expression instanceof Operand) {
 		this.tree = expression;
 	}
 }
+
+/**
+ * This is the smallest value that things should be
+ */
 Equation.prototype.epsilon = 1e-14;
+
+/**
+ * Converts the tree into infix notation
+ * 
+ * @returns {String} The infix string, sans unnecessary parens
+ */
 Equation.prototype.toString = function() {
 	return toInfix(this.tree);
 };
 
+/**
+ * Displays an equation on the screen
+ * 
+ */
 Equation.prototype.display = function() {
 	document.body.innerHTML = "";
 
@@ -19,16 +37,38 @@ Equation.prototype.display = function() {
 	MathJax.Hub.Queue([ "Typeset", MathJax.Hub ]);
 };
 
+/**
+ * Differentiates the tree
+ * 
+ * @returns {Equation} The differentiated equation
+ */
 Equation.prototype.differentiate = function() {
 	return new Equation(this.tree.differentiate());
 };
 
+/**
+ * Evaluates a tree
+ * 
+ * @param variables The variables in object form, like {"x": xValue}
+ * @returns {Number} The evaluated tree
+ */
 Equation.prototype.evaluate = function(variables) {
 	return this.tree.evaluate(variables);
 };
 
+/**
+ * This applies Newton's method for finding zeroes
+ *  
+ * @param lower {Number} The lower bound, currently useless
+ * @param upper {Number} The upper bound, currently useless
+ * @param guess {Number} The guess for the zero of the function 
+ * @param tolerance {Number} [epsilon] The smallest value used in seeing whether
+ *  an answer is acceptable
+ * @returns {Object.<Number, boolean, Number>} The zero found, whether it was 
+ * found to tolerance, and the amount it differs from zero
+ */
 Equation.prototype.zero = function(lower, upper, guess, tolerance) {
-	var accuracy = tolerance || 1e-14;
+	var accuracy = tolerance || this.epsilon;
 	var maxIterations = 100;
 	var solution = false;
 	var error = Infinity;
@@ -70,6 +110,14 @@ Equation.prototype.zero = function(lower, upper, guess, tolerance) {
 
 };
 
+/**
+ * Finds a min or max on the interval. Splits it up into n subintervals
+ * checks if there is a derivative sign change on the interval, uses those as guesses
+ * @param lower {Number} The lower bound of the min or max 
+ * @param upper {Number} The upper bound of the min or max
+ * @param subintervals {Number} The number of subintervals
+ * @returns {Array} The minimums and maximums along the interval
+ */
 Equation.prototype.optimize = function(lower, upper, subintervals) {
 	var n = subintervals || 100;
 
@@ -101,19 +149,19 @@ Equation.prototype.optimize = function(lower, upper, subintervals) {
 
 		if (zero.tolerance) {
 			return zero.solution;
-		} else if (x < 1e-10 || zero.solution < 1e-14) {
+		} else if (x < this.epsilon || zero.solution < this.epsilon) {
 			return 0;
 		}
 	});
 	if (Math.abs(df.evaluate({
 		"x" : upper
-	})) < 1e-14) {
+	})) < this.epsilon) {
 		spots.push(upper);
 	}
 
 	if (Math.abs(df.evaluate({
 		"x" : lower
-	})) < 1e-14) {
+	})) < this.epsilon) {
 		spots.unshift(lower);
 	}
 	return spots.filter(function(elem, pos) {
@@ -122,11 +170,30 @@ Equation.prototype.optimize = function(lower, upper, subintervals) {
 
 };
 
+/**
+ * Solves the intersection between two equations. 
+ * Applies Newton's method on f(x)-g(x) = 0
+ * 
+ * @param curve {Equation} The second curve
+ * @param lower {Number} The lower bound
+ * @param upper {Number} The upper bound
+ * @param guess {Number} The guess of where the intersection is 
+ * @param tolerance {Number} How accurate the x value should be
+ * @returns {Object.<Number, boolean, Number>} The solution
+ */
 Equation.prototype.solve = function(curve, lower, upper, guess, tolerance) {
 	var toSolve = new Equation(new Binary("-", this.tree, curve.tree));
-	return toSolve.zero(lower, upper, guess, tolerance || 1e-14);
+	return toSolve.zero(lower, upper, guess, tolerance || this.epsilon);
 };
 
+/**
+ * Return the intervals of increasing and decreasing
+ * 
+ * @param lower The lower bound
+ * @param upper The upper bound
+ * @param subintervals The number of subintervals
+ * @returns {Array} The intervals of increasing and decreasing
+ */
 Equation.prototype.criticals = function(lower, upper, subintervals) {
 	var criticals = this.optimize(lower, upper, (subintervals || 100));
 	var criticalIntervals = [];
@@ -135,7 +202,7 @@ Equation.prototype.criticals = function(lower, upper, subintervals) {
 				: NaN;
 	};
 
-	if (criticals.length == 0) {
+	if (criticals.length === 0) {
 
 		return [{
 			"lower" : lower,
@@ -145,11 +212,11 @@ Equation.prototype.criticals = function(lower, upper, subintervals) {
 			}))
 		}];
 	}
-	if (Math.abs(criticals[0] - lower) > 1e-10) {
+	if (Math.abs(criticals[0] - lower) > this.epsilon) {
 		criticals.unshift(lower);
 	}
 
-	if (Math.abs(criticals[criticals.length - 1] - upper) > 1e-10) {
+	if (Math.abs(criticals[criticals.length - 1] - upper) > this.epsilon) {
 		criticals.push(upper);
 	}
 
@@ -177,4 +244,5 @@ Equation.prototype.criticals = function(lower, upper, subintervals) {
 
 	return criticalIntervals;
 };
+
 pi = Math.PI;
