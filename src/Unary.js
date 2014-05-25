@@ -130,6 +130,9 @@ function Unary(token, operand) {
 			"precedence" : 100,
 			"operands" : 1
 		},
+
+		
+
 		"abs" : {
 			"id" : 1,
 			"txt" : "abs",

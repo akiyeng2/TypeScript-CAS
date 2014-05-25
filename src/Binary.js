@@ -120,14 +120,13 @@ Binary.prototype.differentiate = function(wrt) {
 		
 		if(left.isVariable() && right.isVariable()) {
 			result = new Binary("+", powerRule, exponentRule);
-		}else if(left.isVariable() && !right.isVariable()) {
+		}else if(left.isVariable(wrt) && !right.isVariable(wrt)) {
 			result = powerRule;
-		}else if(!left.isVariable() && right.isVariable()) {
+		}else if(!left.isVariable(wrt) && right.isVariable(wrt)) {
 			result = exponentRule;
 		}else{
 			result = new Operand("0");
 		}
-		
 	}
 
 	
