@@ -160,7 +160,8 @@ function taylor(expression, order, center, respect) {
 				}
 			}
 		} else {
-			if(coefficient.toString().split(".")[1].length > 7) {
+			
+			if(new Fraction(coefficient, denominator).denominator > 1e5) {
 				if(coefficient > 0) {
 					texString += "+" + ((tex(coefficient + x + "^" + i + "/" + denominator)));
 
