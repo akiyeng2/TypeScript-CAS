@@ -242,7 +242,10 @@ Unary.prototype.evaluate = function(variables) {
 	return evaluations[this.txt](operand);
 };
 
-Unary.prototype.differentiate = function(wrt){
+Unary.prototype.differentiate = function(respect){
+
+	var wrt = respect || "x";
+
 	var dOperand = this.operand.differentiate(wrt);
 	var operand = this.operand;
 	var derivatives = {
@@ -422,4 +425,25 @@ Unary.prototype.differentiate = function(wrt){
 	};
 	
 	return derivatives[this.txt](operand);
+};
+
+Unary.prototype.standardize = function() {
+	this.operand = this.operand.standardize();
+	return this;
+};
+
+Unary.prototype.simplify = function(respect) {
+	var wrt = respect || "x";
+	if(!this.isVariable(wrt)) {
+		var ans = this.evaluate();
+		if(ans < 0) {
+
+			return new Unary("-", new Operand((-ans).toString()));	
+		} else {
+			return new Operand(ans.toString());
+		}
+	} else {
+		this.operand = this.operand.simplify();
+		return this;
+	}
 };

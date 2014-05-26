@@ -76,7 +76,9 @@ Binary.prototype.evaluate = function(variables) {
 	}
 };
 
-Binary.prototype.differentiate = function(wrt) {
+Binary.prototype.differentiate = function(respect) {
+	var wrt = respect || "x";
+
 	var left = this.left;
 	var right = this.right;
 	
@@ -118,7 +120,7 @@ Binary.prototype.differentiate = function(wrt) {
 				), new Unary("ln", left)
 		);
 		
-		if(left.isVariable() && right.isVariable()) {
+		if(left.isVariable(wrt) && right.isVariable(wrt)) {
 			result = new Binary("+", powerRule, exponentRule);
 		}else if(left.isVariable(wrt) && !right.isVariable(wrt)) {
 			result = powerRule;
@@ -132,4 +134,112 @@ Binary.prototype.differentiate = function(wrt) {
 	
 	return result;
 	
+};
+
+Binary.prototype.standardize = function(respect) {
+	var wrt = respect || "x";
+	// if(this.txt === "+" || this.txt == "-") {
+	// 	if(!this.left.isVariable(wrt) && this.right.isVariable(wrt)) {
+	// 		var temp = this.left.standardize();
+	// 		this.left = this.right.standardize();
+	// 		this.right = temp;
+	// 	}
+	// }
+
+
+
+	if(this.txt === "*" || this.txt === "+") {
+
+
+
+		if(this.left.isVariable(wrt) && !this.right.isVariable(wrt)) {
+			var temp = this.left.standardize();
+			this.left = this.right.standardize();
+			this.right = temp;
+		}
+	}
+
+	return this;
+}
+/*
+
+tree:
+		+
+	   / \
+	  1   +
+	  	 / \
+        0   x
+
+Start at the +
+	left = left.simplify()
+		(1).simplify() = 1
+	right = right.simplify()
+		left = 0
+		right = x
+		return x
+	1+x
+
+*/
+Binary.prototype.simplify = function(respect) {
+	
+	var wrt = respect || "x";
+
+
+	var cur = (eqn(this).toString());
+	var left = this.left.simplify();
+
+	var right = this.right.simplify();	
+
+	var result = this;
+
+	result.left = left;
+	result.right = right;
+
+	if(!this.isVariable(wrt)) {
+
+		var ans = this.evaluate();
+		if(ans < 0) {
+
+			return new Unary("-", new Operand((-ans).toString()));
+		} else {
+			return new Operand(ans.toString());
+		}
+	}
+
+	if(this.txt === "+") {
+		if(left.value === 0){
+			result = right;
+		} else if(right.value === 0) {
+			result = left;
+		}
+	}
+
+	if(this.txt === "-") {
+
+		if(left.value === 0) {
+			result = new Unary("-", right);
+		} else if(right.value === 0) {
+			result = left;
+		}
+	}
+
+
+	else if(this.txt === "*") {
+		if(this.left.value === 0 || this.right.value === 0) {
+
+			result = new Operand("0");
+		}
+
+		if(left.value === 1) {
+
+			result = right;
+		} if(right.value === 1) {
+
+			result = left;
+		}
+
+	}
+
+	return result;
+
 };

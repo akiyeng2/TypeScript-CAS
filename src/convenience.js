@@ -17,15 +17,17 @@ function evaluateFunction(expression, variables){
 	return Math.round(tree(expression).evaluate(variables)*1e10)/1e10;
 }
 function differentiateFunction(expression, wrt){
-	var result = toTex(toTree(shunt(expression)).differentiate(wrt));
+	var result = toTex(toTree(shunt(expression)).differentiate(wrt).simplify());
 	document.body.innerHTML = "";
 	document.body.innerHTML+=("$$\\frac{d}{dx}\\left(" + toTex(tree(expression)) + "\\right)="  + result+"$$" + "<br>");
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 
 }
-function differentiateFunctionNoSimplify(expression){
-	return (stringy(toInfix(toPostfix(derivative(toTree(shunt(expression)))))));
-
+function differentiateFunctionNoSimplify(expression, wrt){
+	var result = toTex(toTree(shunt(expression)).differentiate(wrt));
+	document.body.innerHTML = "";
+	document.body.innerHTML+=("$$\\frac{d}{dx}\\left(" + toTex(tree(expression)) + "\\right)="  + result+"$$" + "<br>");
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 }
 function simplifyExpression(expression){
 	return simplify(order(toTree(shunt(expression))));

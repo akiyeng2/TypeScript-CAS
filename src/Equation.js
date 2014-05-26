@@ -72,8 +72,11 @@ Equation.prototype.evaluate = function() {
 	return this.tree.evaluate(variables);
 };
 
-
+Equation.prototype.equals = function(second) {
+	return this.toString() == second.toString();
+}
 
 pi = Math.PI;
 var f = new Equation("x^2-4");
+
 
