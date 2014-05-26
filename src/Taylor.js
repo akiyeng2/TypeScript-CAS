@@ -3,9 +3,9 @@ Equation.prototype.Taylor = function(order, center, respect) {
 	var center = center || 0;
 	var lastDerivative = this;
 	var coefficients = [];
-	for(var i = 0; i < order; i++) {
+	for(var i = 0; i <= order; i++) {
 		coefficients.push(lastDerivative.evaluate(wrt, center));
-		lastDerivative = lastDerivative.differentiate(wrt);
+		lastDerivative = lastDerivative.differentiate(wrt).simplify();
 	}
 
 	return coefficients;

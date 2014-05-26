@@ -239,6 +239,28 @@ Binary.prototype.simplify = function(respect) {
 		}
 
 	}
+	
+	else if(this.txt === "/") {
+		if(this.right.value === 1) {
+			result = left;
+		}
+	}
+	
+	else if(this.txt === "^") {
+		if(this.right.value === 1) {
+			result = left;
+		} else if(this.right.value === 0) {
+			result = new Operand("1");
+		}
+		
+		if(this.left.value === 1) {
+			result = new Operand("1");
+		}
+		
+		if(this.left.value === 0) {
+			result = new Operand("0");
+		}
+	}
 
 	return result;
 
