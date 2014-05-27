@@ -128,7 +128,7 @@ function taylor(expression, order, center, respect) {
 		} else if(center > 0) {
 			x = "(x-" + center + ")";
 		} else {
-			x = "(x+" + center + ")";
+			x = "(x+" + -center + ")";
 		}
 		
 		if(coefficient % 1 === 0) {

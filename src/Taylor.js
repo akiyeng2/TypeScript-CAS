@@ -4,7 +4,12 @@ Equation.prototype.Taylor = function(order, center, respect) {
 	var lastDerivative = this;
 	var coefficients = [];
 	for(var i = 0; i <= order; i++) {
-		coefficients.push(lastDerivative.evaluate(wrt, center));
+		var slope = lastDerivative.evaluate(wrt, center);
+		if(isNaN(slope) || !isFinite(slope)) {
+			throw new Error("Derivative does not exist");
+		}
+		coefficients.push(slope);
+		
 		lastDerivative = lastDerivative.differentiate(wrt).simplify();
 	}
 
