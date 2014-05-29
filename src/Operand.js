@@ -25,6 +25,8 @@ function Operand(token) {
 Operand.prototype.isVariable = function(wrt) {
 	return (this.variable && this.txt == wrt);
 };
+
+
 Operand.prototype.toString = function() {
 	return this.txt;
 };
@@ -39,15 +41,24 @@ Operand.prototype.evaluate = function(variables) {
 	}
 	return this.value;
 };
-Operand.prototype.differentiate = function(respect) {
+Operand.prototype.differentiate = function(respect, show) {
 
+	var show = show || false;
+	
 	var wrt = respect || "x";
-
+	var result;
 	if(this.variable && this.txt == wrt) {
-		return new Operand("1");
+		result = new Operand("1");
 	} else {
-		return new Operand("0");
+		result =  new Operand("0");
 	}
+	
+
+	if(show) {
+		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + texTree(this) + "\\text{ gives }" + texTree(result.simplify()) + "$$<br>");
+	}
+	return result;
+	
 };
 
 Operand.prototype.standardize = function() {

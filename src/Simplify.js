@@ -5,18 +5,8 @@ Equation.prototype.standardize = function() {
 
 Equation.prototype.simplify = function() {
 
-	var lastSimplification = "";
-
-
-	while(this.toString() !== lastSimplification) {
-
-		lastSimplification = this.toString();
-
-		this.tree = this.tree.simplify();
-
-
-	}
-
-
-	return this;
+	this.tree = this.tree.simplify();
+	
+	
 }
+
