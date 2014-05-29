@@ -5,7 +5,7 @@ function Unary(token, operand) {
 			"txt" : "-",
 			"type" : 4,
 			"associativity" : 1,
-			"precedence" : 50,
+			"precedence" : 100,
 			"operands" : 1
 		},
 		"sin" : {
@@ -242,11 +242,13 @@ Unary.prototype.evaluate = function(variables) {
 	return evaluations[this.txt](operand);
 };
 
-Unary.prototype.differentiate = function(respect){
+Unary.prototype.differentiate = function(respect, show){
 
 	var wrt = respect || "x";
+	
+	var show = show || false;
 
-	var dOperand = this.operand.differentiate(wrt);
+	var dOperand = this.operand.differentiate(wrt, show);
 	var operand = this.operand;
 	var derivatives = {
 			"-": function(operand) {
@@ -424,7 +426,12 @@ Unary.prototype.differentiate = function(respect){
 	
 	};
 	
-	return derivatives[this.txt](operand);
+	var result = derivatives[this.txt](operand);
+	
+	if(show) {
+		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + texTree(this) + "\\text{ gives }" + texTree(result.simplify()) + "$$<br>");
+	}
+	return result;
 };
 
 Unary.prototype.standardize = function() {

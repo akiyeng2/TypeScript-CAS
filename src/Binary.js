@@ -35,7 +35,7 @@ function Binary(token, left, right) {
 		},
 		"^" : {
 			"id" : 8,
-			"txt" : "^",
+			"txt" : "^"  ,
 			"type" : 4,
 			"associativity" : 1,
 			"precedence" : 10,
@@ -58,9 +58,11 @@ Binary.prototype.isVariable = function(wrt) {
 	return (this.left.isVariable(wrt) || this.right.isVariable(wrt));
 };
 
+
 Binary.prototype.evaluate = function(variables) {
 	var left = this.left.evaluate(variables);
 	var right = this.right.evaluate(variables);
+	
 	if (this.txt == "+") {
 		return left + right;
 	} else if (this.txt == "-") {
@@ -72,18 +74,24 @@ Binary.prototype.evaluate = function(variables) {
 	} else if (this.txt == "^") {
 		return Math.pow(left, right);
 	} else {
+		console.log(displayTree(this));
 		throw new SyntaxError("Unidentified Flying Binary Operator detected");
 	}
 };
 
-Binary.prototype.differentiate = function(respect) {
+Binary.prototype.differentiate = function(respect, show) {
+	
+	
+	
 	var wrt = respect || "x";
 
 	var left = this.left;
 	var right = this.right;
 	
-	var dLeft = this.left.differentiate(wrt);
-	var dRight = this.right.differentiate(wrt);
+	var show = show || false;
+	
+	var dLeft = this.left.differentiate(wrt, show);
+	var dRight = this.right.differentiate(wrt, show);
 	var result = null;
 	if(this.txt == "+") {
 		result = new Binary("+", dLeft, dRight);
@@ -130,7 +138,9 @@ Binary.prototype.differentiate = function(respect) {
 			result = new Operand("0");
 		}
 	}
-
+	if(show) {
+		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + texTree(this) + "\\text{ gives }" + texTree(result.simplify()) + "$$<br>");
+	}
 	
 	return result;
 	
@@ -182,10 +192,13 @@ Start at the +
 */
 Binary.prototype.simplify = function(respect) {
 	
+	
+	
 	var wrt = respect || "x";
 
-
 	var cur = (eqn(this).toString());
+	
+	
 	var left = this.left.simplify();
 
 	var right = this.right.simplify();	
@@ -261,6 +274,7 @@ Binary.prototype.simplify = function(respect) {
 			result = new Operand("0");
 		}
 	}
+	
 
 	return result;
 

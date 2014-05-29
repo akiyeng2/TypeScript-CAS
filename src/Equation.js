@@ -42,8 +42,11 @@ Equation.prototype.display = function() {
  * 
  * @returns {Equation} The differentiated equation
  */
-Equation.prototype.differentiate = function(wrt) {
-	return new Equation(this.tree.differentiate(wrt));
+Equation.prototype.differentiate = function(wrt, show) {
+	
+	var show = show || false;
+
+	return new Equation(this.tree.differentiate(wrt, show));
 };
 
 /**
@@ -76,7 +79,6 @@ Equation.prototype.equals = function(second) {
 	return this.toString() == second.toString();
 }
 
+
+
 pi = Math.PI;
-var f = new Equation("x^2-4");
-
-

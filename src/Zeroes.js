@@ -60,7 +60,6 @@ Equation.prototype.guess = function(lower, upper, respect, subintervals) {
  */
 
 Equation.prototype.zero = function(lower, upper, guess, respect, exists, tolerance) {
-
 	var wrt = respect || "x";
 
 	var accuracy = tolerance || this.epsilon;
@@ -70,7 +69,7 @@ Equation.prototype.zero = function(lower, upper, guess, respect, exists, toleran
 	if(typeof guess === "undefined") {
 		guess = (lower + upper) / 2;
 	} else {
-		if(guess <= lower || guess >= upper) {
+		if(guess < lower || guess > upper) {
 			throw new Error("Initial guess must be between lower and upper bounds");
 		}
 	}
@@ -92,7 +91,7 @@ Equation.prototype.zero = function(lower, upper, guess, respect, exists, toleran
 
 		error = Math.abs(x0 - x1) / Math.abs(x1);
 
-		if (error < accuracy) {
+		if (error < accuracy || Math.abs(x0 - x1) < accuracy) {
 
 			solution = true;
 
@@ -215,11 +214,11 @@ Equation.prototype.solve = function(curve, lower, upper, guess, tolerance) {
  */
 Equation.prototype.criticals = function(lower, upper, respect, subintervals) {
 	var wrt = respect || "x";
-	var criticals = this.optimize(lower, upper, (subintervals || 100));
+	var criticals = this.solveZeroes(lower, upper, respect, subintervals);
 	var criticalIntervals = [];
 
 	if (criticals.length === 0) {
-
+		console.log((lower + (lower + upper)/(subintervals || 100)));
 		return [{
 			"lower" : lower,
 			"upper" : upper,
@@ -227,6 +226,8 @@ Equation.prototype.criticals = function(lower, upper, respect, subintervals) {
 				"x" : (lower + (lower + upper)/(subintervals || 100)) 
 			}))
 		}];
+		
+		
 	}
 	if (Math.abs(criticals[0] - lower) > this.epsilon) {
 		criticals.unshift(lower);
@@ -238,9 +239,7 @@ Equation.prototype.criticals = function(lower, upper, respect, subintervals) {
 
 	var numIntervals = 0;
 	for ( var i = 0; i < criticals.length - 1; i++) {
-		var sgn = sign(this.differentiate(wrt || "x").evaluate({
-			"x" : (criticals[i] + criticals[i + 1]) / 2
-		}));
+		var sgn = sign(this.differentiate(wrt || "x").evaluate(wrt , (criticals[i] + criticals[i + 1]) / 2));
 		var prevSign = null;
 		if (numIntervals.length > 0) {
 			prevSign = criticalIntervals[numIntervals - 1];
@@ -307,7 +306,7 @@ Equation.prototype.solveZeroes = function(lower, upper, respect, subintervals, t
 		var guess = zeroes[i];
 		solutions.push(this.zero(guess.lower, guess.upper, guess.value, wrt, true, tolerance));
 	}
-
+	
 	for(var i = 0; i < criticals.length - 1; i++) {
 		var current = criticals[i];
 		var next = criticals[i + 1];
@@ -319,8 +318,8 @@ Equation.prototype.solveZeroes = function(lower, upper, respect, subintervals, t
 
 		var soln = x.solution;
 		if(x.tolerance) {
-			soln = Math.round(soln * 1e9) / 1e9	;
-			if(soln === 0) {
+			
+			if(Math.abs(soln) < 1e-9) {
 				soln = 0;
 			}
 			return soln;
@@ -332,6 +331,7 @@ Equation.prototype.solveZeroes = function(lower, upper, respect, subintervals, t
 
 
 	return rounded.filter(function(element, position) {
-		return (rounded.indexOf(element) == position && typeof element !== "undefined");
+		return (rounded.indexOf(element) == position && typeof element !== "undefined" && element >= lower && element <= upper);
+
 	});
 }

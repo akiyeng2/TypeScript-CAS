@@ -9,8 +9,7 @@ Equation.prototype.Taylor = function(order, center, respect) {
 			throw new Error("Derivative does not exist");
 		}
 		coefficients.push(slope);
-		
-		lastDerivative = lastDerivative.differentiate(wrt).simplify();
+		lastDerivative = simplify(lastDerivative.differentiate(wrt));
 	}
 
 	return coefficients;
