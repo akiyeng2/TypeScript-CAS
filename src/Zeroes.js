@@ -93,7 +93,7 @@ Equation.prototype.zero = function(lower, upper, guess, respect, exists, toleran
 		if (error < accuracy || Math.abs(x0 - x1) < accuracy) {
 
 			solution = true;
-
+			console.log(i);
 			break;
 		}
 

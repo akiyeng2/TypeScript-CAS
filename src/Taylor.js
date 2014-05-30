@@ -61,7 +61,7 @@ Equation.prototype.Taylor = function(order, centerTxt, respect) {
 	for(var i = 1; i < coefficients.length; i++) {
 		var frac = new Fraction(coefficients[i], factorials[i]);
 		var str = Math.abs(frac.numerator) + x + "^" + i + "/" + frac.denominator;
-		console.log(str);		
+		
 		if(frac.numerator > 0) {
 			series = new Binary("+", series, tree(str));
 		} else if(frac.numerator < 0){
