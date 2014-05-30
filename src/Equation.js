@@ -14,7 +14,7 @@ function Equation(expression) {
 
 /**
  * This is the smallest value that things should be
- */
+*/
 Equation.prototype.epsilon = 1e-10;
 
 /**
@@ -76,9 +76,8 @@ Equation.prototype.evaluate = function() {
 };
 
 Equation.prototype.equals = function(second) {
-	return this.toString() == second.toString();
+    return this.toString() == second.toString();
 }
-
 
 
 pi = Math.PI;
