@@ -1,5 +1,4 @@
- 
-Equation.prototype.guess = function(lower, upper, respect, subintervals) {
+ Equation.prototype.guess = function(lower, upper, respect, subintervals) {
 
 	var wrt = respect || "x";
 
@@ -335,3 +334,6 @@ Equation.prototype.solveZeroes = function(lower, upper, respect, subintervals, t
 
 	});
 }
+
+
+

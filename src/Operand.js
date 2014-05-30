@@ -1,25 +1,36 @@
 function Operand(token) {
-	if (typeof token == "string") {
-
-		token = tokenize(token)[0];
-	}
-
-
-
-	if (token.type == 0) {
-		this.variable = true;
-		this.value = null;
-	} else if (token.type == 5) {
+	
+	
+	if(typeof token == "number") {
 		this.variable = false;
-		if (token.txt == "e") {
-			this.value = Math.E;
-		} else if (token.txt == "pi") {
-			this.value = Math.PI;
-		} else {
-			this.value = parseFloat(token.txt, 10);
+		this.value = token;
+
+		this.txt = token.toString();
+		
+	} else {
+	
+		if (typeof token == "string") {
+	
+			token = tokenize(token)[0];
+		} 
+	
+	
+		if (token.type == 0) {
+			this.variable = true;
+			this.value = null;
+		} else if(token.type == 5){
+			this.variable = false;
+			if (token.txt == "e") {
+				this.value = Math.E;
+			} else if (token.txt == "pi") {
+				this.value = Math.PI;
+			} else {
+				this.value = parseFloat(token.txt, 10);
+			}
 		}
+		this.txt = token.txt;
 	}
-	this.txt = token.txt;
+
 
 }
 Operand.prototype.isVariable = function(wrt) {
@@ -55,7 +66,7 @@ Operand.prototype.differentiate = function(respect, show) {
 	
 
 	if(show) {
-		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + texTree(this) + "\\text{ gives }" + texTree(result.simplify()) + "$$<br>");
+		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + toTex(this) + "\\text{ gives }" + toTex(result.simplify()) + "$$<br>");
 	}
 	return result;
 	

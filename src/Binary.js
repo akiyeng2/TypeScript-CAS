@@ -139,7 +139,7 @@ Binary.prototype.differentiate = function(respect, show) {
 		}
 	}
 	if(show) {
-		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + texTree(this) + "\\text{ gives }" + texTree(result.simplify()) + "$$<br>");
+		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + toTex(this) + "\\text{ gives }" + toTex(result.simplify()) + "$$<br>");
 	}
 	
 	return result;
@@ -279,3 +279,4 @@ Binary.prototype.simplify = function(respect) {
 	return result;
 
 };
+

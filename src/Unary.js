@@ -429,7 +429,7 @@ Unary.prototype.differentiate = function(respect, show){
 	var result = derivatives[this.txt](operand);
 	
 	if(show) {
-		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + texTree(this) + "\\text{ gives }" + texTree(result.simplify()) + "$$<br>");
+		resultsDiv.innerHTML += ("$$\\text{Differentiating }" + toTex(this) + "\\text{ gives }" + toTex(result.simplify()) + "$$<br>");
 	}
 	return result;
 };
@@ -443,6 +443,20 @@ Unary.prototype.simplify = function(respect) {
 	var wrt = respect || "x";
 	if(!this.isVariable(wrt)) {
 		var ans = this.evaluate();
+
+		var frac = new Fraction(ans);
+
+		if(frac.numerator > 1e5 || frac.denominator > 1e5) {
+			this.operand = this.operand.simplify();
+			var result = new Operand(ans);
+			result.txt = new Equation(this).toString();
+			result.tex = toTex(this);
+			return result;			
+
+			
+			
+		}
+		
 		if(ans < 0) {
 
 			return new Unary("-", new Operand((-ans).toString()));	

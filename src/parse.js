@@ -287,8 +287,8 @@ function toTex(tree, str, parent) {
 	}
 	
 	if (tree instanceof Operand) {
-		result = txt;
-
+		return (tree.tex) ? tree.tex : txt;
+		
 	} else if (tree instanceof Binary) {
 		if(txt == "^") {
 			if(tree.left instanceof Operand) {
